@@ -104,3 +104,108 @@ if __name__ == "__main__":
             os.remove(file_path)
 ```
 
+```python
+import hashlib
+import os
+
+def hash_file(filename, algorithm='sha256'):
+    """
+    Calculate the hash of a file using the specified algorithm.
+    
+    Args:
+    filename (str): Path to the file to be hashed
+    algorithm (str): Hash algorithm to use (default: sha256)
+    
+    Returns:
+    str: Hexadecimal representation of the file's hash
+    
+    This function is useful in cybersecurity for:
+    - Verifying file integrity
+    - Detecting changes in critical system files
+    - Creating file signatures for malware analysis
+    """
+    
+    # Dictionary of supported hash algorithms
+    hash_functions = {
+        'md5': hashlib.md5,
+        'sha1': hashlib.sha1,
+        'sha256': hashlib.sha256,
+        'sha512': hashlib.sha512
+    }
+    
+    if algorithm not in hash_functions:
+        raise ValueError(f"Unsupported algorithm: {algorithm}")
+    
+    hash_obj = hash_functions[algorithm]()
+    
+    try:
+        with open(filename, 'rb') as file:
+            # Read and update hash in chunks for memory efficiency
+            for chunk in iter(lambda: file.read(4096), b''):
+                hash_obj.update(chunk)
+        return hash_obj.hexdigest()
+    except IOError:
+        print(f"Error: File '{filename}' not found or inaccessible.")
+        return None
+
+def compare_file_hashes(file1, file2, algorithm='sha256'):
+    """
+    Compare the hashes of two files.
+    
+    Args:
+    file1 (str): Path to the first file
+    file2 (str): Path to the second file
+    algorithm (str): Hash algorithm to use (default: sha256)
+    
+    Returns:
+    bool: True if hashes match, False otherwise
+    
+    This function is useful for:
+    - Verifying if two files are identical
+    - Checking if a file has been modified
+    - Validating downloaded files against known good hashes
+    """
+    
+    hash1 = hash_file(file1, algorithm)
+    hash2 = hash_file(file2, algorithm)
+    
+    if hash1 and hash2:
+        return hash1 == hash2
+    return False
+
+def verify_file_integrity(filename, expected_hash, algorithm='sha256'):
+    """
+    Verify the integrity of a file by comparing its hash to an expected value.
+    
+    Args:
+    filename (str): Path to the file to verify
+    expected_hash (str): Expected hash value
+    algorithm (str): Hash algorithm to use (default: sha256)
+    
+    Returns:
+    bool: True if the file's hash matches the expected hash, False otherwise
+    
+    This function is crucial for:
+    - Ensuring critical system files haven't been tampered with
+    - Verifying the authenticity of downloaded software or updates
+    - Detecting potential malware infections or unauthorized modifications
+    """
+    
+    file_hash = hash_file(filename, algorithm)
+    if file_hash:
+        return file_hash.lower() == expected_hash.lower()
+    return False
+
+# Example usage
+if __name__ == "__main__":
+    # Calculate and print the SHA256 hash of this script
+    print(f"SHA256 hash of this script: {hash_file(__file__)}")
+    
+    # Compare this script with itself (should be True)
+    print(f"Self-comparison result: {compare_file_hashes(__file__, __file__)}")
+    
+    # Verify the integrity of this script (replace with actual hash)
+    expected_hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    print(f"Integrity check result: {verify_file_integrity(__file__, expected_hash)}")
+```
+

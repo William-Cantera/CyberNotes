@@ -209,3 +209,97 @@ if __name__ == "__main__":
     print(f"Integrity check result: {verify_file_integrity(__file__, expected_hash)}")
 ```
 
+```python
+import hashlib
+import os
+
+def hash_file(file_path, algorithms=['md5', 'sha1', 'sha256']):
+    """
+    Calculate cryptographic hashes for a given file.
+    
+    Args:
+    file_path (str): Path to the file to be hashed
+    algorithms (list): List of hash algorithms to use (default: md5, sha1, sha256)
+    
+    Returns:
+    dict: A dictionary with algorithm names as keys and corresponding hash values
+    
+    This function is useful in cybersecurity for:
+    - File integrity checking
+    - Malware identification (comparing file hashes with known malware hashes)
+    - Digital forensics (creating file fingerprints)
+    """
+    
+    hash_dict = {}
+    
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    for algorithm in algorithms:
+        if algorithm not in hashlib.algorithms_available:
+            raise ValueError(f"Unsupported hash algorithm: {algorithm}")
+        
+        hasher = hashlib.new(algorithm)
+        
+        with open(file_path, 'rb') as file:
+            buffer = file.read(65536)  # Read in 64k chunks
+            while len(buffer) > 0:
+                hasher.update(buffer)
+                buffer = file.read(65536)
+        
+        hash_dict[algorithm] = hasher.hexdigest()
+    
+    return hash_dict
+
+def compare_hashes(file_path, known_hashes):
+    """
+    Compare file hashes with known hashes.
+    
+    Args:
+    file_path (str): Path to the file to be checked
+    known_hashes (dict): Dictionary of known hashes {algorithm: hash_value}
+    
+    Returns:
+    dict: A dictionary with comparison results
+    
+    This function is useful for:
+    - Verifying file integrity
+    - Detecting file tampering
+    - Identifying known malicious files
+    """
+    
+    file_hashes = hash_file(file_path, algorithms=list(known_hashes.keys()))
+    comparison = {}
+    
+    for algorithm, known_hash in known_hashes.items():
+        if algorithm in file_hashes:
+            comparison[algorithm] = file_hashes[algorithm] == known_hash
+        else:
+            comparison[algorithm] = False
+    
+    return comparison
+
+# Example usage
+if __name__ == "__main__":
+    try:
+        # Calculate hashes for a file
+        file_path = "example.txt"
+        hashes = hash_file(file_path)
+        print(f"Hashes for {file_path}:")
+        for algorithm, hash_value in hashes.items():
+            print(f"{algorithm}: {hash_value}")
+        
+        # Compare with known hashes
+        known_hashes = {
+            "md5": "098f6bcd4621d373cade4e832627b4f6",
+            "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+        }
+        results = compare_hashes(file_path, known_hashes)
+        print("\nHash comparison results:")
+        for algorithm, match in results.items():
+            print(f"{algorithm}: {'Match' if match else 'Mismatch'}")
+    
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+```
+

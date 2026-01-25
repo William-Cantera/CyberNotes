@@ -303,3 +303,78 @@ if __name__ == "__main__":
         print(f"An error occurred: {str(e)}")
 ```
 
+```python
+import hashlib
+import os
+import time
+
+def hash_file_checker(file_path, expected_hash, hash_type='sha256'):
+    """
+    Check if a file's hash matches an expected value.
+    
+    Args:
+    file_path (str): Path to the file to be checked
+    expected_hash (str): The expected hash value
+    hash_type (str): The hash algorithm to use (default: sha256)
+    
+    Returns:
+    tuple: (bool, str) - (Whether hash matches, Actual calculated hash)
+    
+    Usage:
+    result, actual_hash = hash_file_checker('/path/to/file', 'expected_hash_value')
+    
+    This function is useful in cybersecurity for:
+    1. Verifying file integrity
+    2. Detecting unauthorized modifications
+    3. Validating downloaded files
+    4. Identifying known malicious files
+    """
+    
+    # Dictionary of supported hash algorithms
+    hash_functions = {
+        'md5': hashlib.md5,
+        'sha1': hashlib.sha1,
+        'sha256': hashlib.sha256,
+        'sha512': hashlib.sha512
+    }
+    
+    # Check if the specified hash type is supported
+    if hash_type not in hash_functions:
+        raise ValueError(f"Unsupported hash type: {hash_type}")
+    
+    # Get the appropriate hash function
+    hash_func = hash_functions[hash_type]
+    
+    # Check if file exists
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    # Calculate the file's hash
+    start_time = time.time()
+    with open(file_path, 'rb') as file:
+        file_hash = hash_func()
+        chunk = file.read(8192)
+        while chunk:
+            file_hash.update(chunk)
+            chunk = file.read(8192)
+    
+    calculated_hash = file_hash.hexdigest()
+    end_time = time.time()
+    
+    # Compare calculated hash with expected hash
+    hash_matches = calculated_hash.lower() == expected_hash.lower()
+    
+    # Print results
+    print(f"File: {file_path}")
+    print(f"Hash type: {hash_type}")
+    print(f"Calculated hash: {calculated_hash}")
+    print(f"Expected hash: {expected_hash}")
+    print(f"Hash match: {'Yes' if hash_matches else 'No'}")
+    print(f"Time taken: {end_time - start_time:.4f} seconds")
+    
+    return hash_matches, calculated_hash
+
+# Example usage:
+# result, actual_hash = hash_file_checker('example.txt', '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824')
+```
+

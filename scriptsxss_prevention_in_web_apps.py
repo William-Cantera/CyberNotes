@@ -98,3 +98,105 @@ if __name__ == "__main__":
         print("---")
 ```
 
+```python
+import re
+import html
+
+def xss_sanitizer(input_string):
+    """
+    Sanitizes input to prevent XSS attacks in web applications.
+    
+    Args:
+    input_string (str): The user input to be sanitized.
+    
+    Returns:
+    str: Sanitized string safe for rendering in HTML.
+    
+    Usage:
+    sanitized_input = xss_sanitizer(user_input)
+    
+    This function is useful in cybersecurity for:
+    1. Demonstrating proper input sanitization techniques
+    2. Testing web application security
+    3. Educating developers about XSS prevention
+    """
+    
+    # Step 1: HTML Encoding
+    # Convert special characters to HTML entities
+    encoded_string = html.escape(input_string)
+    
+    # Step 2: JavaScript Encoding
+    # Escape any JavaScript-specific characters
+    js_escape_chars = {
+        '\\': '\\\\',
+        "'": "\\'",
+        '"': '\\"',
+        '\n': '\\n',
+        '\r': '\\r',
+        '\t': '\\t',
+        '\f': '\\f',
+        '\b': '\\b'
+    }
+    for char, escaped in js_escape_chars.items():
+        encoded_string = encoded_string.replace(char, escaped)
+    
+    # Step 3: URL Encoding
+    # Encode characters that have special meaning in URLs
+    encoded_string = re.sub(r'[^\w\-\.\~]', lambda m: f'%{ord(m.group(0)):02X}', encoded_string)
+    
+    # Step 4: Remove potential script tags
+    encoded_string = re.sub(r'<script.*?>.*?</script>', '', encoded_string, flags=re.IGNORECASE | re.DOTALL)
+    
+    # Step 5: Remove potential event handlers
+    encoded_string = re.sub(r'on\w+\s*=', '', encoded_string, flags=re.IGNORECASE)
+    
+    return encoded_string
+
+def xss_vulnerability_checker(input_string):
+    """
+    Checks if a given input string potentially contains XSS vulnerabilities.
+    
+    Args:
+    input_string (str): The string to be checked for XSS vulnerabilities.
+    
+    Returns:
+    bool: True if potential XSS vulnerability is detected, False otherwise.
+    
+    Usage:
+    is_vulnerable = xss_vulnerability_checker(user_input)
+    
+    This function is useful in cybersecurity for:
+    1. Quick assessment of user inputs
+    2. Automated scanning of web application inputs
+    3. Educating about common XSS patterns
+    """
+    
+    # List of common XSS patterns to check
+    xss_patterns = [
+        r'<script.*?>',
+        r'javascript:',
+        r'onerror=',
+        r'onload=',
+        r'onclick=',
+        r'alert\(',
+        r'eval\(',
+        r'document\.cookie',
+        r'document\.write',
+        r'\.innerhtml',
+    ]
+    
+    # Check if any of the patterns are in the input string
+    for pattern in xss_patterns:
+        if re.search(pattern, input_string, re.IGNORECASE):
+            return True
+    
+    return False
+
+# Example usage
+if __name__ == "__main__":
+    test_input = "<script>alert('XSS');</script>"
+    print(f"Original input: {test_input}")
+    print(f"Sanitized input: {xss_sanitizer(test_input)}")
+    print(f"Is vulnerable: {xss_vulnerability_checker(test_input)}")
+```
+

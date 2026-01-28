@@ -67,3 +67,67 @@ By following these strategies and maintaining a proactive stance against ransomw
 
 ---
 
+## Ransomware Recovery Strategies
+
+### Key Concepts
+
+Ransomware recovery involves a set of practices and procedures aimed at restoring systems and data after a ransomware attack. The primary goals are:
+
+1. Containment of the threat
+2. Data recovery
+3. System restoration
+4. Prevention of future attacks
+
+### Best Practices
+
+#### 1. Isolate Infected Systems
+
+- Immediately disconnect infected devices from the network
+- Turn off Wi-Fi and Bluetooth to prevent spread
+
+#### 2. Report the Incident
+
+- Notify relevant authorities (e.g., FBI, local law enforcement)
+- Inform stakeholders and, if necessary, affected customers
+
+#### 3. Assess the Damage
+
+- Identify affected systems and data
+- Determine the ransomware variant if possible
+
+#### 4. Restore from Backups
+
+- Use offline, air-gapped backups to restore systems
+- Verify backup integrity before restoration
+
+```bash
+# Example command to restore from a backup image
+sudo dd if=/path/to/backup.img of=/dev/sda bs=64K status=progress
+```
+
+#### 5. Decrypt Files (if possible)
+
+- Check resources like No More Ransom for decryption tools
+- Be cautious of fake decryption tools
+
+#### 6. Rebuild Systems
+
+- If restoration isn't possible, rebuild systems from scratch
+- Install latest security patches and updates
+
+#### 7. Post-Incident Actions
+
+- Conduct a thorough investigation to identify the attack vector
+- Update security policies and implement additional safeguards
+- Provide cybersecurity awareness training to employees
+
+### Real-World Tip
+
+Many organizations are turning to immutable backups to enhance their ransomware recovery strategy. These backups cannot be altered or deleted for a set period, ensuring that even if ransomware infiltrates backup systems, there's always a clean copy available for recovery.
+
+### Example: Baltimore City Ransomware Attack (2019)
+
+In May 2019, Baltimore City faced a severe ransomware attack that crippled various city services. The city refused to pay the ransom and instead focused on rebuilding their systems. This process took several weeks and cost an estimated $18 million. The incident highlights the importance of robust backup strategies and the potential costs of inadequate preparation.
+
+---
+

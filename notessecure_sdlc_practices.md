@@ -104,3 +104,65 @@ By following these secure SDLC practices, development teams can create more resi
 
 ---
 
+## Secure SDLC Practices
+
+The Secure Software Development Life Cycle (SSDLC) integrates security measures throughout the entire software development process. By implementing secure practices from the start, organizations can significantly reduce vulnerabilities and potential security breaches.
+
+### Key Concepts
+
+1. **Shift-Left Security**: Incorporating security early in the development process rather than as an afterthought.
+2. **Continuous Security**: Implementing security practices throughout all stages of the SDLC.
+3. **Risk-based Approach**: Prioritizing security efforts based on potential impact and likelihood of threats.
+
+### Best Practices
+
+- **Requirements Phase**:
+  - Conduct threat modeling
+  - Define security requirements
+  - Perform risk assessment
+
+- **Design Phase**:
+  - Implement secure design principles (e.g., least privilege, defense in depth)
+  - Review and validate the security architecture
+
+- **Development Phase**:
+  - Use secure coding guidelines
+  - Conduct regular code reviews
+  - Implement proper error handling and logging
+
+- **Testing Phase**:
+  - Perform security testing (e.g., SAST, DAST, penetration testing)
+  - Validate input/output handling
+
+- **Deployment Phase**:
+  - Secure configuration management
+  - Implement access controls
+  - Enable proper logging and monitoring
+
+- **Maintenance Phase**:
+  - Regular security updates and patches
+  - Continuous monitoring for new vulnerabilities
+
+### Real-world Example
+
+Consider a web application development project. During the design phase, the team implements input validation to prevent SQL injection attacks:
+
+```python
+def validate_input(user_input):
+    # Remove any potentially malicious characters
+    sanitized_input = re.sub(r'[^\w\s-]', '', user_input)
+    return sanitized_input
+
+# Usage in a database query
+user_id = validate_input(request.form['user_id'])
+query = f"SELECT * FROM users WHERE id = {user_id}"
+```
+
+This simple practice, when consistently applied throughout the application, significantly reduces the risk of SQL injection vulnerabilities.
+
+### Tip
+
+Automate security checks in your CI/CD pipeline to catch potential vulnerabilities early and ensure consistent application of security practices across all code changes.
+
+---
+

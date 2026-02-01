@@ -44,3 +44,53 @@ Wireshark is an essential tool for network analysis and security auditing. By un
 
 ---
 
+## Network Traffic Analysis with Wireshark
+
+### Introduction
+Wireshark is a powerful, open-source network protocol analyzer used for network troubleshooting, analysis, and security auditing. It allows cybersecurity professionals to capture and interactively browse the traffic running on a computer network.
+
+### Key Concepts
+
+1. **Packet Capture**: Wireshark can capture live network traffic or read from previously saved capture files.
+
+2. **Protocol Dissection**: It understands and can decode hundreds of network protocols, presenting data in a human-readable format.
+
+3. **Filtering**: Users can apply complex display filters to focus on specific traffic of interest.
+
+4. **Colorization**: Packets are color-coded based on their type, making it easier to identify different protocols or potential issues.
+
+### Best Practices
+
+- Always ensure you have proper authorization before capturing network traffic.
+- Use capture filters to reduce the amount of data collected, especially on busy networks.
+- Regularly update Wireshark to benefit from the latest protocol decoders and security patches.
+- Save capture files for later analysis or as evidence in security investigations.
+
+### Real-World Example: Detecting a Port Scan
+
+To detect a potential port scan using Wireshark:
+
+1. Capture traffic on the suspected target network.
+2. Apply a display filter to show only TCP SYN packets:
+   ```
+   tcp.flags.syn == 1 and tcp.flags.ack == 0
+   ```
+3. Look for a single source IP sending SYN packets to multiple ports on your system.
+4. Use the "Conversations" feature to visualize the scan pattern.
+
+### Tip: Using Display Filters
+
+Wireshark's display filters are powerful but can be complex. Start with simple filters and build up:
+
+- `http`: Shows only HTTP traffic
+- `ip.addr == 192.168.1.1`: Displays packets to/from a specific IP
+- `tcp.port == 80 or udp.port == 53`: Shows web and DNS traffic
+
+Combine filters with logical operators (`and`, `or`, `not`) for more precise analysis.
+
+### Conclusion
+
+Wireshark is an essential tool for network analysis and security. By mastering its features, cybersecurity professionals can gain deep insights into network behavior, detect anomalies, and investigate security incidents effectively.
+
+---
+

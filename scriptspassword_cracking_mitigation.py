@@ -225,3 +225,88 @@ if __name__ == "__main__":
         print(f"Failed to crack password after {attempts} attempts and {time_taken:.2f} seconds")
 ```
 
+```python
+import hashlib
+import re
+import time
+
+def password_strength_checker(password):
+    """
+    Check the strength of a given password and provide feedback.
+    
+    This function analyzes a password for common weaknesses and provides
+    a score along with suggestions for improvement. It's useful for:
+    - Educating users on password security
+    - Implementing password policies
+    - Demonstrating password cracking mitigation techniques
+    
+    Usage:
+    score, feedback = password_strength_checker("your_password_here")
+    print(f"Password strength: {score}/5")
+    print("Feedback:", feedback)
+    
+    :param password: The password to check
+    :return: Tuple containing score (0-5) and feedback string
+    """
+    score = 5
+    feedback = []
+    
+    # Check length
+    if len(password) < 12:
+        score -= 1
+        feedback.append("Password should be at least 12 characters long.")
+    
+    # Check for uppercase, lowercase, numbers, and special characters
+    if not re.search(r'[A-Z]', password):
+        score -= 1
+        feedback.append("Include at least one uppercase letter.")
+    if not re.search(r'[a-z]', password):
+        score -= 1
+        feedback.append("Include at least one lowercase letter.")
+    if not re.search(r'\d', password):
+        score -= 1
+        feedback.append("Include at least one number.")
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        score -= 1
+        feedback.append("Include at least one special character.")
+    
+    # Check for common patterns
+    common_patterns = ['123', 'abc', 'qwerty', 'password', 'admin']
+    if any(pattern in password.lower() for pattern in common_patterns):
+        score -= 1
+        feedback.append("Avoid common words or patterns.")
+    
+    # Simulate basic brute-force attempt
+    start_time = time.time()
+    iterations = 100000
+    for _ in range(iterations):
+        hashlib.sha256(password.encode()).hexdigest()
+    time_taken = time.time() - start_time
+    
+    crack_time_estimate = (time_taken / iterations) * (36 ** len(password))
+    if crack_time_estimate < 1e6:  # Less than 11.5 days
+        feedback.append(f"Estimated brute-force time: {crack_time_estimate:.2f} seconds. Consider a stronger password.")
+    
+    score = max(0, score)  # Ensure score doesn't go below 0
+    feedback_str = " ".join(feedback) if feedback else "Good password!"
+    
+    return score, feedback_str
+
+# Example usage
+if __name__ == "__main__":
+    test_passwords = [
+        "password123",
+        "P@ssw0rd!",
+        "thisisaverylongpasswordbutnotsecure",
+        "Tr0ub4dor&3",
+        "correcthorsebatterystaple"
+    ]
+    
+    for pwd in test_passwords:
+        score, feedback = password_strength_checker(pwd)
+        print(f"Password: {pwd}")
+        print(f"Strength: {score}/5")
+        print(f"Feedback: {feedback}")
+        print("-" * 50)
+```
+

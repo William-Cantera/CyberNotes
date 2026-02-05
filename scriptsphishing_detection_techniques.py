@@ -108,3 +108,113 @@ if __name__ == "__main__":
     print(result)
 ```
 
+```python
+import re
+import urllib.parse
+from urllib.request import urlopen
+from html.parser import HTMLParser
+
+class PhishingDetector:
+    """A basic phishing detection class to analyze URLs and webpage content."""
+
+    def __init__(self):
+        self.suspicious_words = [
+            'login', 'account', 'bank', 'verify', 'secure', 'webscr', 'update'
+        ]
+        self.safe_domains = ['paypal.com', 'google.com', 'gmail.com', 'github.com']
+
+    def check_url(self, url):
+        """
+        Check if a URL has characteristics commonly associated with phishing.
+        
+        :param url: The URL to check
+        :return: A tuple (is_suspicious, reasons)
+        """
+        parsed = urllib.parse.urlparse(url)
+        reasons = []
+
+        # Check for IP address in hostname
+        if re.match(r'\d+\.\d+\.\d+\.\d+', parsed.netloc):
+            reasons.append("IP address used instead of domain name")
+
+        # Check for suspicious words in URL
+        if any(word in url.lower() for word in self.suspicious_words):
+            reasons.append("Suspicious words found in URL")
+
+        # Check for URL shortening services
+        if len(parsed.netloc) < 7:  # Most short URL services use short domain names
+            reasons.append("Possibly a shortened URL")
+
+        # Check if the domain is not in our list of known safe domains
+        if parsed.netloc not in self.safe_domains:
+            reasons.append("Domain not in list of known safe domains")
+
+        return bool(reasons), reasons
+
+    def analyze_webpage(self, url):
+        """
+        Fetch and analyze the content of a webpage for potential phishing indicators.
+        
+        :param url: The URL of the webpage to analyze
+        :return: A list of suspicious elements found
+        """
+        class PhishingHTMLParser(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.forms = []
+                self.external_links = []
+            
+            def handle_starttag(self, tag, attrs):
+                if tag == 'form':
+                    self.forms.append(dict(attrs))
+                elif tag == 'a':
+                    href = dict(attrs).get('href', '')
+                    if href.startswith('http'):
+                        self.external_links.append(href)
+
+        try:
+            with urlopen(url) as response:
+                html_content = response.read().decode('utf-8')
+            
+            parser = PhishingHTMLParser()
+            parser.feed(html_content)
+
+            suspicious_elements = []
+
+            # Check for password fields in forms
+            for form in parser.forms:
+                if any('password' in str(attr).lower() for attr in form.values()):
+                    suspicious_elements.append("Form with password field detected")
+                    break
+
+            # Check for links to external domains
+            parsed_url = urllib.parse.urlparse(url)
+            base_domain = parsed_url.netloc
+            for link in parser.external_links:
+                if urllib.parse.urlparse(link).netloc != base_domain:
+                    suspicious_elements.append(f"Link to external domain: {link}")
+
+            return suspicious_elements
+
+        except Exception as e:
+            return [f"Error analyzing webpage: {str(e)}"]
+
+# Usage example:
+if __name__ == "__main__":
+    detector = PhishingDetector()
+    test_url = "http://suspicious-login.example.com/verify.php"
+    
+    url_check, reasons = detector.check_url(test_url)
+    print(f"URL check results for {test_url}:")
+    print(f"Suspicious: {url_check}")
+    for reason in reasons:
+        print(f"- {reason}")
+    
+    print("\nWebpage analysis:")
+    webpage_analysis = detector.analyze_webpage(test_url)
+    for element in webpage_analysis:
+        print(f"- {element}")
+
+# This script provides a basic framework for phishing detection.
+#
+

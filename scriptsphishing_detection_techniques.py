@@ -218,3 +218,123 @@ if __name__ == "__main__":
 # This script provides a basic framework for phishing detection.
 #
 
+```python
+import re
+import urllib.parse
+from urllib.request import urlopen
+from html.parser import HTMLParser
+
+class LinkExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            for attr in attrs:
+                if attr[0] == 'href':
+                    self.links.append(attr[1])
+
+def analyze_url_for_phishing(url):
+    """
+    Analyzes a given URL for potential phishing indicators.
+    
+    This function checks for several common phishing techniques:
+    1. Use of IP addresses in the domain
+    2. Long URLs (potential obfuscation)
+    3. URL shortening services
+    4. '@' symbol in URL (may be used to confuse)
+    5. Presence of suspicious keywords
+    6. Use of subdomains to mimic legitimate sites
+    7. SSL/TLS certificate presence
+    8. Domain age (requires whois, not implemented here)
+    
+    Args:
+    url (str): The URL to analyze
+    
+    Returns:
+    dict: A dictionary of potential phishing indicators and their status
+    
+    Usage:
+    result = analyze_url_for_phishing("http://example.com")
+    for indicator, status in result.items():
+        print(f"{indicator}: {status}")
+    
+    Note: This is a basic implementation and should not be used as a sole 
+    means of phishing detection in a production environment.
+    """
+    
+    indicators = {
+        "IP in domain": False,
+        "Long URL": False,
+        "URL shortener": False,
+        "@ symbol": False,
+        "Suspicious keywords": False,
+        "Subdomains": False,
+        "SSL/TLS": False
+    }
+    
+    # Check for IP in domain
+    ip_pattern = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    if re.match(ip_pattern, urllib.parse.urlparse(url).netloc):
+        indicators["IP in domain"] = True
+    
+    # Check URL length
+    if len(url) > 75:
+        indicators["Long URL"] = True
+    
+    # Check for URL shorteners (this list should be expanded)
+    shorteners = ['bit.ly', 'goo.gl', 't.co', 'tinyurl.com']
+    if any(shortener in url for shortener in shorteners):
+        indicators["URL shortener"] = True
+    
+    # Check for '@' symbol
+    if '@' in url:
+        indicators["@ symbol"] = True
+    
+    # Check for suspicious keywords
+    suspicious_keywords = ['login', 'signin', 'verify', 'bank', 'account', 'update', 'confirm']
+    if any(keyword in url.lower() for keyword in suspicious_keywords):
+        indicators["Suspicious keywords"] = True
+    
+    # Check for excessive subdomains
+    if url.count('.') > 3:
+        indicators["Subdomains"] = True
+    
+    # Check for SSL/TLS
+    try:
+        response = urlopen(url)
+        indicators["SSL/TLS"] = response.url.startswith('https')
+    except:
+        pass
+    
+    return indicators
+
+def extract_links(url):
+    """
+    Extracts all links from a given URL.
+    
+    This function can be used to analyze all links on a suspected phishing page.
+    
+    Args:
+    url (str): The URL to extract links from
+    
+    Returns:
+    list: A list of all extracted links
+    
+    Usage:
+    links = extract_links("http://example.com")
+    for link in links:
+        print(analyze_url_for_phishing(link))
+    """
+    try:
+        with urlopen(url) as response:
+            html = response.read().decode('utf-8')
+            extractor = LinkExtractor()
+            extractor.feed(html)
+            return extractor.links
+    except:
+        return []
+
+# Example usage
+

@@ -94,3 +94,48 @@ Wireshark is an essential tool for network analysis and security. By mastering i
 
 ---
 
+## Network Traffic Analysis with Wireshark
+
+### Overview
+Wireshark is a powerful open-source network protocol analyzer used for network troubleshooting, analysis, and security auditing. It allows cybersecurity professionals to capture and interactively browse network traffic in real-time.
+
+### Key Concepts
+
+1. **Packet Capture**: Wireshark can capture packets from a live network or read from a saved capture file.
+
+2. **Protocol Dissection**: It understands and can decode hundreds of protocols, presenting data in a human-readable format.
+
+3. **Filtering**: Users can apply complex display filters to focus on specific traffic of interest.
+
+4. **Color Coding**: Packets are color-coded based on their type, making it easier to identify different protocols or potential issues.
+
+### Best Practices
+
+- Always ensure you have proper authorization before capturing network traffic.
+- Use capture filters to reduce the amount of data collected, especially on busy networks.
+- Regularly update Wireshark to benefit from the latest protocol decoders and security patches.
+- Save capture files for later analysis or as evidence in security incidents.
+
+### Real-World Example: Detecting a Port Scan
+
+To detect a potential port scan using Wireshark:
+
+1. Start a packet capture on the suspected target interface.
+2. Apply a display filter to show only TCP SYN packets:
+   ```
+   tcp.flags.syn == 1 and tcp.flags.ack == 0
+   ```
+3. Look for a high number of SYN packets from a single source IP to multiple destination ports.
+
+### Tip: Using Display Filters
+
+Wireshark's display filters are powerful tools for focusing on specific traffic. Here are some useful examples:
+
+- Show only HTTP traffic: `http`
+- Display packets with a specific IP: `ip.addr == 192.168.1.100`
+- Find all DNS queries: `dns.qry.name contains "example.com"`
+
+Remember, mastering Wireshark takes practice. Regularly analyzing both normal and abnormal traffic will improve your skills in identifying potential security threats and network issues.
+
+---
+

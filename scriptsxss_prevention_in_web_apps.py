@@ -200,3 +200,104 @@ if __name__ == "__main__":
     print(f"Is vulnerable: {xss_vulnerability_checker(test_input)}")
 ```
 
+```python
+import html
+import re
+
+def xss_sanitize(input_string):
+    """
+    Sanitize input to prevent XSS attacks.
+    
+    Args:
+    input_string (str): The string to sanitize
+    
+    Returns:
+    str: Sanitized string
+    
+    This function helps prevent XSS attacks by:
+    1. HTML encoding special characters
+    2. Removing potentially dangerous HTML tags
+    3. Removing JavaScript event handlers
+    
+    Usage:
+    sanitized = xss_sanitize(user_input)
+    
+    Useful in pentesting/defense to:
+    - Test input sanitization in web applications
+    - Implement basic XSS protection in simple web apps
+    - Demonstrate XSS prevention techniques
+    """
+    
+    # Step 1: HTML encode special characters
+    sanitized = html.escape(input_string)
+    
+    # Step 2: Remove potentially dangerous HTML tags
+    dangerous_tags = ['script', 'iframe', 'embed', 'object', 'meta']
+    for tag in dangerous_tags:
+        sanitized = re.sub(f'<{tag}.*?>.*?</{tag}>', '', sanitized, flags=re.IGNORECASE | re.DOTALL)
+        sanitized = re.sub(f'<{tag}.*?/?>', '', sanitized, flags=re.IGNORECASE)
+    
+    # Step 3: Remove JavaScript event handlers
+    event_handlers = ['onload', 'onclick', 'onmouseover', 'onerror', 'onsubmit']
+    for handler in event_handlers:
+        sanitized = re.sub(f'{handler}=.*?["\'](.*?)["\']', '', sanitized, flags=re.IGNORECASE)
+    
+    return sanitized
+
+def xss_check(input_string):
+    """
+    Check if a string potentially contains XSS payload.
+    
+    Args:
+    input_string (str): The string to check
+    
+    Returns:
+    bool: True if potential XSS detected, False otherwise
+    
+    This function checks for common XSS indicators:
+    1. Presence of <script> tags
+    2. Presence of JavaScript event handlers
+    3. Presence of data: or javascript: URI schemes
+    
+    Usage:
+    is_xss = xss_check(user_input)
+    
+    Useful in pentesting/defense to:
+    - Quickly scan inputs for potential XSS payloads
+    - Implement basic XSS detection in web applications
+    - Educate about common XSS patterns
+    """
+    
+    # Check for <script> tags
+    if re.search('<script.*?>.*?</script>', input_string, re.IGNORECASE | re.DOTALL):
+        return True
+    
+    # Check for event handlers
+    event_handlers = ['onload', 'onclick', 'onmouseover', 'onerror', 'onsubmit']
+    for handler in event_handlers:
+        if re.search(f'{handler}=', input_string, re.IGNORECASE):
+            return True
+    
+    # Check for dangerous URI schemes
+    if re.search('(data|javascript):' , input_string, re.IGNORECASE):
+        return True
+    
+    return False
+
+# Example usage
+if __name__ == "__main__":
+    test_inputs = [
+        "Hello, world!",
+        "<script>alert('XSS')</script>",
+        "Click <a href='javascript:alert(\"XSS\")'>here</a>",
+        "<img src='x' onerror='alert(\"XSS\")'>",
+        "<iframe src='data:text/html,<script>alert(\"XSS\")</script>'>",
+    ]
+    
+    for input_str in test_inputs:
+        print(f"Original: {input_str}")
+        print(f"Sanitized: {xss_sanitize(input_str)}")
+        print(f"XSS Detected: {xss_check(input_str)}")
+        print()
+```
+

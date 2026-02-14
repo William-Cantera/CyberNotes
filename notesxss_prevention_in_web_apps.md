@@ -120,3 +120,57 @@ XSS prevention requires a multi-layered approach. Combine input validation, outp
 
 ---
 
+## XSS Prevention in Web Apps
+
+Cross-Site Scripting (XSS) is a prevalent security vulnerability in web applications. Proper prevention techniques are crucial to protect users and maintain application integrity.
+
+### Key Concepts
+
+- **Types of XSS:**
+  1. Reflected XSS
+  2. Stored XSS
+  3. DOM-based XSS
+
+- **Attack Vector:** XSS occurs when untrusted data is inserted into a web page without proper validation or encoding.
+
+### Best Practices for Prevention
+
+1. **Input Validation:** Validate and sanitize all user inputs on the server-side.
+
+2. **Output Encoding:** Encode user-supplied data before rendering it in HTML, JavaScript, or CSS contexts.
+
+3. **Content Security Policy (CSP):** Implement CSP headers to restrict sources of executable scripts.
+
+4. **HttpOnly Flag:** Set the HttpOnly flag on cookies to prevent access via client-side scripts.
+
+5. **X-XSS-Protection Header:** Enable the browser's built-in XSS filter:
+
+   ```
+   X-XSS-Protection: 1; mode=block
+   ```
+
+6. **Use Modern Frameworks:** Leverage frameworks with built-in XSS protections, like React or Angular.
+
+### Example: Encoding User Input
+
+Consider a simple message board application. Instead of directly inserting user messages into HTML:
+
+```javascript
+// Vulnerable code
+document.getElementById('message').innerHTML = userMessage;
+
+// Safer approach
+import { encode } from 'he';
+document.getElementById('message').textContent = encode(userMessage);
+```
+
+By using a library like 'he' to encode the message, special characters are converted to their HTML entity equivalents, preventing script execution.
+
+### Real-World Tip
+
+When working with APIs, don't assume the data is safe. Always treat data from APIs as untrusted and apply proper encoding before displaying it in your application.
+
+Remember, XSS prevention is an ongoing process. Regularly audit your code, keep libraries updated, and stay informed about new attack vectors and prevention techniques to maintain a robust security posture.
+
+---
+

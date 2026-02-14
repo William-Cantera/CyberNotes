@@ -139,3 +139,48 @@ Remember, mastering Wireshark takes practice. Regularly analyzing both normal an
 
 ---
 
+## Network Traffic Analysis with Wireshark
+
+### Overview
+Wireshark is a powerful, open-source network protocol analyzer used for network troubleshooting, analysis, and security auditing. It allows cybersecurity professionals to capture and inspect network traffic in real-time, providing deep insights into network communications.
+
+### Key Concepts
+
+1. **Packet Capture**: Wireshark can capture live network traffic or analyze previously captured packet data.
+
+2. **Protocol Dissection**: It breaks down packets into their component parts, showing details of various protocols (e.g., TCP, UDP, HTTP).
+
+3. **Filtering**: Users can apply filters to focus on specific types of traffic, IP addresses, or protocols.
+
+4. **Color Coding**: Packets are color-coded based on their type or potential issues, aiding in quick visual analysis.
+
+### Best Practices
+
+- **Capture Filters**: Use capture filters to reduce the amount of data collected, focusing only on relevant traffic.
+- **Display Filters**: Utilize display filters to analyze specific aspects of captured traffic.
+- **Save Captures**: Always save important captures for future reference or analysis.
+- **Regular Updates**: Keep Wireshark updated to ensure support for the latest protocols and security fixes.
+
+### Example: Analyzing HTTP Traffic
+
+1. Start a capture on your network interface.
+2. Visit a non-HTTPS website.
+3. Stop the capture and apply the display filter: `http`
+4. Examine the packets to see unencrypted HTTP requests and responses.
+
+### Practical Tip
+
+To quickly find potential security issues, use the following display filter:
+
+```
+tcp.flags.syn == 1 and tcp.flags.ack == 0
+```
+
+This filter will show all SYN packets without ACK, which could indicate a potential SYN flood attack.
+
+### Conclusion
+
+Wireshark is an essential tool for network analysis and security. By understanding its features and applying proper techniques, cybersecurity professionals can gain valuable insights into network behavior, identify potential threats, and troubleshoot complex network issues. Regular practice with diverse network scenarios will enhance proficiency in using this powerful tool.
+
+---
+

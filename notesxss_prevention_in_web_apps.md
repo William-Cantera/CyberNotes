@@ -174,3 +174,69 @@ Remember, XSS prevention is an ongoing process. Regularly audit your code, keep 
 
 ---
 
+## XSS Prevention in Web Apps
+
+Cross-Site Scripting (XSS) is a critical security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. Preventing XSS is crucial for maintaining the security and integrity of web applications.
+
+### Key Concepts
+
+- **Types of XSS:**
+  1. Stored XSS
+  2. Reflected XSS
+  3. DOM-based XSS
+
+- **Attack Vector:** User input that is not properly sanitized or encoded
+
+- **Potential Impact:** 
+  - Cookie theft
+  - Session hijacking
+  - Defacement of websites
+  - Distribution of malware
+
+### Best Practices for XSS Prevention
+
+1. **Input Validation:** Validate and sanitize all user inputs on the server-side.
+
+2. **Output Encoding:** Encode user-supplied data before rendering it in HTML, JavaScript, CSS, or URLs.
+
+3. **Content Security Policy (CSP):** Implement CSP headers to restrict sources of content that can be loaded.
+
+4. **HttpOnly Cookies:** Use HttpOnly flag for session cookies to prevent access via JavaScript.
+
+5. **X-XSS-Protection Header:** Enable built-in browser XSS protection with:
+   ```
+   X-XSS-Protection: 1; mode=block
+   ```
+
+6. **Escape Special Characters:** Convert characters like `<`, `>`, `&`, `'`, and `"` to their HTML entity equivalents.
+
+7. **Use Modern Frameworks:** Leverage frameworks with built-in XSS protections (e.g., React, Angular).
+
+### Real-World Example
+
+Consider a simple comment system. Instead of directly inserting user input:
+
+```javascript
+// Vulnerable code
+document.getElementById('comment').innerHTML = userInput;
+```
+
+Use a function to sanitize the input:
+
+```javascript
+function sanitizeHTML(str) {
+    return str.replace(/[^\w. ]/gi, function (c) {
+        return '&#' + c.charCodeAt(0) + ';';
+    });
+}
+
+// Safe code
+document.getElementById('comment').innerHTML = sanitizeHTML(userInput);
+```
+
+### Pro Tip
+
+Always treat all user input as untrusted, including data from databases, as it might have been contaminated by previous XSS attacks. Implement a multi-layered defense strategy, combining input validation, output encoding, and content security policies for robust XSS prevention.
+
+---
+

@@ -252,3 +252,77 @@ if __name__ == "__main__":
     print(json.dumps(results, indent=2))
 ```
 
+```python
+import hashlib
+import os
+import json
+import time
+
+def verify_software_supply_chain(software_path, manifest_path):
+    """
+    Verifies the integrity of a software package against a trusted manifest.
+    
+    This function helps defend against supply chain attacks by ensuring
+    downloaded software matches expected cryptographic hashes.
+    
+    Args:
+    software_path (str): Path to the software package to verify
+    manifest_path (str): Path to the JSON manifest file with expected hashes
+    
+    Returns:
+    bool: True if verification succeeds, False otherwise
+    
+    Usage:
+    result = verify_software_supply_chain("/path/to/software.zip", "/path/to/manifest.json")
+    if result:
+        print("Software package verified successfully")
+    else:
+        print("Verification failed - potential supply chain attack!")
+    """
+    
+    # Load the manifest file
+    try:
+        with open(manifest_path, 'r') as f:
+            manifest = json.load(f)
+    except (IOError, json.JSONDecodeError):
+        print("Error: Unable to read or parse manifest file")
+        return False
+    
+    # Verify the software package exists
+    if not os.path.exists(software_path):
+        print("Error: Software package not found")
+        return False
+    
+    # Calculate SHA256 hash of the software package
+    sha256_hash = hashlib.sha256()
+    with open(software_path, "rb") as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    calculated_hash = sha256_hash.hexdigest()
+    
+    # Compare calculated hash with expected hash from manifest
+    expected_hash = manifest.get('sha256_hash')
+    if not expected_hash:
+        print("Error: Manifest does not contain expected SHA256 hash")
+        return False
+    
+    if calculated_hash != expected_hash:
+        print("Error: Hash mismatch")
+        print(f"Calculated: {calculated_hash}")
+        print(f"Expected:   {expected_hash}")
+        return False
+    
+    # Verify timestamp (optional, assumes 'timestamp' key in manifest)
+    if 'timestamp' in manifest:
+        manifest_time = manifest['timestamp']
+        current_time = int(time.time())
+        if current_time - manifest_time > 86400:  # 24 hours
+            print("Warning: Manifest is more than 24 hours old")
+    
+    print("Software package verified successfully")
+    return True
+
+# Example usage:
+# verify_software_supply_chain("./downloaded_software.zip", "./trusted_manifest.json")
+```
+

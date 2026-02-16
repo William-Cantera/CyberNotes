@@ -109,3 +109,54 @@ By maintaining an up-to-date SBOM, you can quickly identify and respond to vulne
 
 ---
 
+## Supply Chain Attack Defense
+
+Supply chain attacks target the less-secure elements in a supply network to compromise the end target. Defending against these attacks requires a comprehensive approach:
+
+### Key Concepts
+
+1. **Vendor Risk Management**: Assessing and monitoring the security posture of all suppliers and partners.
+2. **Software Composition Analysis (SCA)**: Identifying and tracking third-party components in software.
+3. **Secure Development Lifecycle (SDL)**: Implementing security at every stage of software development.
+4. **Zero Trust Architecture**: Assuming no trust and verifying every access attempt.
+
+### Best Practices
+
+- Conduct regular security audits of suppliers and third-party vendors
+- Implement rigorous change management processes
+- Use code signing and integrity verification for all software updates
+- Maintain an up-to-date inventory of all hardware and software assets
+- Employ network segmentation to limit the impact of a potential breach
+- Regularly update and patch all systems and applications
+
+### Real-World Example: SolarWinds Attack
+
+In 2020, attackers compromised SolarWinds' build process, injecting malicious code into their Orion software updates. This affected thousands of organizations, including government agencies.
+
+**Lesson learned**: Always verify the integrity of software updates before deployment.
+
+### Practical Tip: Implement Software Bill of Materials (SBOM)
+
+An SBOM is a formal record of the components and dependencies in a software product. It helps in:
+
+- Quickly identifying vulnerable components
+- Streamlining the patching process
+- Enhancing overall software transparency
+
+Example SBOM entry:
+
+```json
+{
+  "component": "log4j-core",
+  "version": "2.14.1",
+  "supplier": "Apache Software Foundation",
+  "hash": "f8bbd45f67d8f20bfe1f06452da5e3c5"
+}
+```
+
+By maintaining an SBOM, organizations can rapidly respond to newly discovered vulnerabilities in their software supply chain, significantly reducing the attack surface.
+
+Remember, supply chain security is only as strong as its weakest link. Continuous vigilance, regular assessments, and proactive measures are crucial in maintaining a robust defense against supply chain attacks.
+
+---
+

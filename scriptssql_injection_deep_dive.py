@@ -88,3 +88,89 @@ for inp in test_inputs:
     print("---")
 ```
 
+```python
+import re
+import urllib.parse
+
+def sql_injection_checker(input_string):
+    """
+    Checks a given input string for potential SQL injection attempts.
+    
+    This function examines the input for common SQL injection patterns
+    and returns a list of potential risks found.
+    
+    Args:
+    input_string (str): The string to be checked for SQL injection attempts
+    
+    Returns:
+    list: A list of potential SQL injection risks found in the input
+    
+    Usage:
+    risks = sql_injection_checker("admin' OR '1'='1")
+    for risk in risks:
+        print(risk)
+    
+    This tool is useful for:
+    - Developers to test their input validation
+    - Security teams to scan for potential vulnerabilities
+    - Educational purposes to understand SQL injection patterns
+    """
+    
+    risks = []
+    
+    # Decode URL-encoded input
+    decoded_input = urllib.parse.unquote(input_string)
+    
+    # Check for basic SQL injection attempts
+    if re.search(r"(\s|^)(UNION|SELECT|FROM|WHERE)(\s|$)", decoded_input, re.IGNORECASE):
+        risks.append("Potential SQL keywords detected")
+    
+    # Check for comment-based SQL injection
+    if re.search(r"(--|#|/\*)", decoded_input):
+        risks.append("SQL comment markers detected")
+    
+    # Check for equality-based SQL injection
+    if re.search(r"('|\")\s*(=|LIKE)\s*('|\")", decoded_input, re.IGNORECASE):
+        risks.append("Potential equality-based SQL injection detected")
+    
+    # Check for UNION-based SQL injection
+    if re.search(r"UNION\s+(ALL\s+)?SELECT", decoded_input, re.IGNORECASE):
+        risks.append("Potential UNION-based SQL injection detected")
+    
+    # Check for time-based blind SQL injection
+    if re.search(r"(SLEEP|WAITFOR\s+DELAY|BENCHMARK)", decoded_input, re.IGNORECASE):
+        risks.append("Potential time-based blind SQL injection detected")
+    
+    # Check for boolean-based blind SQL injection
+    if re.search(r"(AND|OR)\s+(\d+|'[^']+'|\"[^\"]+\")\s*=\s*(\d+|'[^']+'|\"[^\"]+\")", decoded_input, re.IGNORECASE):
+        risks.append("Potential boolean-based blind SQL injection detected")
+    
+    # Check for batched (stacked) queries
+    if re.search(r";.*(\s|^)(INSERT|UPDATE|DELETE|DROP|TRUNCATE)(\s|$)", decoded_input, re.IGNORECASE):
+        risks.append("Potential batched query detected")
+    
+    return risks
+
+# Example usage
+if __name__ == "__main__":
+    test_inputs = [
+        "admin' OR '1'='1",
+        "1 UNION SELECT username, password FROM users",
+        "1; DROP TABLE users--",
+        "1 AND 1=1",
+        "1' AND SLEEP(5)--",
+        "Safe input here"
+    ]
+    
+    for input_string in test_inputs:
+        print(f"Checking: {input_string}")
+        results = sql_injection_checker(input_string)
+        if results:
+            print("Potential SQL injection risks found:")
+            for risk in results:
+                print(f"- {risk}")
+        else:
+            print("No SQL injection risks detected.")
+        print()
+```
+

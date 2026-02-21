@@ -115,3 +115,73 @@ if __name__ == "__main__":
     
     secure_passwor
 
+```python
+import re
+import sys
+
+def analyze_secure_sdlc_practices(code_file):
+    """
+    Analyzes a Python code file for basic secure SDLC practices.
+    
+    Usage: analyze_secure_sdlc_practices('path/to/code.py')
+    
+    This function checks for:
+    1. Use of input() without validation
+    2. Hardcoded credentials
+    3. Use of deprecated/insecure functions
+    4. Potential SQL injection vulnerabilities
+    5. Lack of input sanitization
+
+    Useful for:
+    - Quick security checks during code reviews
+    - Educating developers on common security pitfalls
+    - Integrating basic security checks into CI/CD pipelines
+    """
+
+    with open(code_file, 'r') as file:
+        code = file.read()
+
+    issues = []
+
+    # Check for use of input() without validation
+    if 'input(' in code and not re.search(r'input\([^)]+\)\s*\.strip\(\)', code):
+        issues.append("WARNING: Use of input() without validation detected.")
+
+    # Check for hardcoded credentials
+    if re.search(r'password\s*=\s*["\'][^"\']+["\']', code, re.IGNORECASE):
+        issues.append("CRITICAL: Hardcoded password detected.")
+
+    # Check for deprecated/insecure functions
+    insecure_functions = ['eval(', 'exec(', 'os.system(', 'subprocess.call(']
+    for func in insecure_functions:
+        if func in code:
+            issues.append(f"WARNING: Use of potentially insecure function {func} detected.")
+
+    # Check for potential SQL injection vulnerabilities
+    if re.search(r'cursor\.execute\([^)]*\+', code):
+        issues.append("CRITICAL: Potential SQL injection vulnerability detected.")
+
+    # Check for lack of input sanitization
+    if 'sanitize' not in code and 'escape' not in code:
+        issues.append("INFO: No obvious input sanitization detected. Verify manually.")
+
+    return issues
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <path_to_code_file>")
+        sys.exit(1)
+
+    code_file = sys.argv[1]
+    results = analyze_secure_sdlc_practices(code_file)
+
+    if results:
+        print("Potential security issues found:")
+        for issue in results:
+            print(f"- {issue}")
+    else:
+        print("No obvious security issues detected. Always perform thorough manual review.")
+
+    print("\nRemember: This is a basic check and does not replace comprehensive security testing.")
+```
+

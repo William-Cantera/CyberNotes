@@ -57,3 +57,55 @@ By using cryptographic hash functions, even if the database is compromised, the 
 
 ---
 
+## Cryptographic Hash Functions
+
+Cryptographic hash functions are fundamental tools in information security, providing a way to generate fixed-size outputs (called hashes) from arbitrary-sized inputs. These functions play a crucial role in various security applications, including:
+
+- Data integrity verification
+- Password storage
+- Digital signatures
+- Blockchain technology
+
+### Key Properties
+
+1. **One-way function**: It should be computationally infeasible to reverse the hash and obtain the original input.
+2. **Deterministic**: The same input always produces the same hash output.
+3. **Avalanche effect**: A small change in the input should result in a significantly different hash output.
+4. **Collision resistance**: It should be extremely difficult to find two different inputs that produce the same hash.
+
+### Common Hash Functions
+
+- MD5 (deprecated due to vulnerabilities)
+- SHA-1 (deprecated for most uses)
+- SHA-256, SHA-384, SHA-512 (part of the SHA-2 family)
+- SHA-3 family
+
+### Best Practices
+
+- Always use cryptographically secure hash functions (e.g., SHA-256 or better).
+- Regularly update hash algorithms as older ones become vulnerable.
+- For password hashing, use specialized algorithms like bcrypt, Argon2, or PBKDF2.
+- Implement salting when storing password hashes to prevent rainbow table attacks.
+
+### Real-world Example: File Integrity Check
+
+To verify the integrity of a downloaded file:
+
+1. The provider publishes the file's hash.
+2. After downloading, the user generates the file's hash locally.
+3. The user compares the two hashes to ensure they match.
+
+```bash
+# Generate SHA-256 hash of a file
+shasum -a 256 filename.zip
+
+# Compare with the published hash
+echo "published_hash filename.zip" | shasum -a 256 -c
+```
+
+### Security Tip
+
+Never transmit passwords in plain text. Instead, hash them client-side before sending them over the network. This practice helps protect the user's original password even if the transmission is intercepted.
+
+---
+

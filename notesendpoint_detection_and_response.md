@@ -100,3 +100,49 @@ By leveraging these integrations, you can create a more robust and efficient sec
 
 ---
 
+## Endpoint Detection and Response (EDR)
+
+Endpoint Detection and Response (EDR) is a critical cybersecurity technology that focuses on monitoring, detecting, and responding to threats at the endpoint level. EDR solutions provide real-time visibility into endpoint activities, enabling organizations to quickly identify and mitigate potential security incidents.
+
+### Key Concepts
+
+- **Continuous Monitoring**: EDR tools constantly collect and analyze data from endpoints, including desktops, laptops, servers, and mobile devices.
+- **Threat Detection**: Advanced algorithms and machine learning capabilities help identify suspicious activities and potential threats.
+- **Incident Response**: EDR solutions offer automated and manual response capabilities to contain and remediate threats.
+- **Forensic Analysis**: Detailed logs and historical data enable in-depth investigation of security incidents.
+
+### Best Practices
+
+1. **Implement Across All Endpoints**: Ensure comprehensive coverage by deploying EDR on all organizational endpoints.
+2. **Regular Updates**: Keep EDR software and threat intelligence feeds up-to-date to detect the latest threats.
+3. **Integration**: Integrate EDR with other security tools like SIEM for a holistic security approach.
+4. **Staff Training**: Train IT and security teams on effectively using EDR tools and interpreting alerts.
+5. **Customize Alerts**: Tailor alert thresholds and rules to your organization's specific needs and risk profile.
+
+### Real-World Example
+
+A financial services company implemented an EDR solution across its corporate network. The EDR system detected an unusual PowerShell command execution on an employee's laptop, indicating a potential fileless malware attack. The security team was immediately alerted and used the EDR tool to:
+
+1. Isolate the affected endpoint
+2. Analyze the malicious script
+3. Trace the attack's origin
+4. Remove the threat
+5. Patch the vulnerability exploited by the attacker
+
+This quick response prevented the malware from spreading and potentially exfiltrating sensitive financial data.
+
+### Tip: EDR Log Analysis
+
+When investigating an incident, use EDR logs to create a timeline of events. Look for:
+
+```
+- Unusual process creations
+- Unexpected network connections
+- File system changes
+- Registry modifications
+```
+
+By correlating these events, you can often reconstruct the attack chain and improve your overall security posture.
+
+---
+

@@ -41,3 +41,64 @@ By applying these mitigation strategies, organizations can significantly reduce 
 
 ---
 
+## Password Cracking Mitigation
+
+Password cracking remains a significant threat to cybersecurity. Implementing effective mitigation strategies is crucial for protecting user accounts and sensitive information.
+
+### Key Concepts
+
+1. **Password Complexity**: Enforcing strong password policies
+2. **Salting and Hashing**: Secure storage of passwords
+3. **Rate Limiting**: Preventing brute-force attacks
+4. **Multi-Factor Authentication (MFA)**: Adding an extra layer of security
+
+### Best Practices
+
+- **Implement Strong Password Policies**
+  - Require minimum length (e.g., 12 characters)
+  - Mix uppercase, lowercase, numbers, and special characters
+  - Prohibit common words and patterns
+
+- **Use Modern Hashing Algorithms**
+  - Employ bcrypt, Argon2, or PBKDF2
+  - Avoid outdated algorithms like MD5 or SHA-1
+
+- **Salt Passwords Before Hashing**
+  - Generate unique salt for each password
+  - Combine salt with password before hashing
+
+- **Enforce Account Lockouts**
+  - Temporarily lock accounts after multiple failed attempts
+  - Implement exponential backoff for retry attempts
+
+- **Enable Multi-Factor Authentication**
+  - Combine something the user knows (password) with something they have (e.g., smartphone) or are (biometrics)
+
+### Real-World Example
+
+A company experienced a data breach where hashed passwords were stolen. Passwords hashed with MD5 were quickly cracked, while those using bcrypt with a high work factor remained secure.
+
+### Implementation Tip
+
+To implement salting and hashing using bcrypt in Python:
+
+```python
+import bcrypt
+
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed
+
+def verify_password(password, hashed):
+    return bcrypt.checkpw(password.encode('utf-8'), hashed)
+
+# Usage
+hashed_password = hash_password("user_password")
+is_correct = verify_password("user_password", hashed_password)
+```
+
+By implementing these mitigation strategies, organizations can significantly reduce the risk of successful password cracking attempts and enhance overall account security.
+
+---
+

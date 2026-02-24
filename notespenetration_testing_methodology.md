@@ -112,3 +112,64 @@ Remember, the goal of penetration testing is not just to find vulnerabilities, b
 
 ---
 
+## Penetration Testing Methodology
+
+Penetration testing, often called "pen testing," is a structured approach to assessing the security of a system, network, or application. A well-defined methodology ensures thorough and consistent testing. The typical penetration testing methodology includes the following phases:
+
+### 1. Planning and Reconnaissance
+- Define scope and objectives
+- Gather information about the target
+- Use OSINT (Open Source Intelligence) techniques
+
+### 2. Scanning
+- Identify live systems
+- Discover open ports and services
+- Perform vulnerability scans
+
+### 3. Vulnerability Assessment
+- Analyze scan results
+- Identify potential vulnerabilities
+- Prioritize vulnerabilities based on risk
+
+### 4. Exploitation
+- Attempt to exploit identified vulnerabilities
+- Gain initial access to systems
+- Escalate privileges
+
+### 5. Post-Exploitation
+- Maintain access
+- Pivot to other systems
+- Gather sensitive data
+
+### 6. Reporting
+- Document findings
+- Provide remediation recommendations
+- Present results to stakeholders
+
+Best practices for penetration testing include:
+- Obtain proper authorization before testing
+- Follow a well-defined methodology
+- Use a combination of automated tools and manual techniques
+- Regularly update tools and knowledge
+- Maintain detailed documentation throughout the process
+
+### Real-world Example: Web Application Testing
+
+When testing a web application, a penetration tester might follow these steps:
+
+1. Reconnaissance: Gather information about the application, its technologies, and infrastructure.
+2. Scanning: Use tools like Nmap to identify open ports and services.
+3. Vulnerability Assessment: Employ web application scanners like OWASP ZAP.
+4. Exploitation: Attempt to exploit identified vulnerabilities, such as SQL injection:
+
+```sql
+' OR '1'='1
+```
+
+5. Post-Exploitation: If successful, attempt to access sensitive data or escalate privileges.
+6. Reporting: Document findings, including the SQL injection vulnerability and its potential impact.
+
+Remember, ethical considerations and legal compliance are crucial in penetration testing. Always ensure you have explicit permission before testing any system or application.
+
+---
+

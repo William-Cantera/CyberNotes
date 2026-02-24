@@ -73,3 +73,90 @@ Always use in controlled, authorized environments for educational purposes only.
 """
 ```
 
+```python
+import random
+import time
+
+def ai_threat_simulator(num_attempts=10, learning_rate=0.1):
+    """
+    Simulates an AI-powered password guessing attack.
+    
+    This function demonstrates how an AI system might adapt its guessing strategy
+    based on feedback, simulating a more advanced brute-force attack.
+    
+    Args:
+    num_attempts (int): Number of password guess attempts
+    learning_rate (float): Rate at which the AI adjusts its strategy (0-1)
+    
+    Returns:
+    tuple: (success, attempts) - whether password was guessed and number of attempts
+    
+    Usage:
+    success, attempts = ai_threat_simulator(20, 0.2)
+    print(f"Attack {'succeeded' if success else 'failed'} after {attempts} attempts.")
+    
+    Note: This is a simplified simulation for educational purposes only.
+    Real AI-based attacks would be far more complex and potentially dangerous.
+    """
+    
+    # Simulated password (in a real scenario, this would be unknown)
+    true_password = "S3cur3P@ss"
+    password_length = len(true_password)
+    character_set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+    
+    # AI's initial "knowledge"
+    character_weights = {char: 1 for char in character_set}
+    
+    for attempt in range(1, num_attempts + 1):
+        # Generate a password guess based on current weights
+        guess = ''.join(random.choices(list(character_weights.keys()), 
+                                       weights=list(character_weights.values()), 
+                                       k=password_length))
+        
+        print(f"Attempt {attempt}: {guess}")
+        
+        if guess == true_password:
+            print("Password cracked!")
+            return True, attempt
+        
+        # Simulate feedback and learning
+        for i, char in enumerate(guess):
+            if char == true_password[i]:
+                # Increase weight for correct characters
+                character_weights[char] += learning_rate
+            else:
+                # Decrease weight for incorrect characters
+                character_weights[char] = max(0, character_weights[char] - learning_rate / 2)
+        
+        time.sleep(0.5)  # Slow down simulation for readability
+    
+    print("Max attempts reached. Attack failed.")
+    return False, num_attempts
+
+# Example usage
+success, attempts = ai_threat_simulator(20, 0.2)
+print(f"Attack {'succeeded' if success else 'failed'} after {attempts} attempts.")
+
+"""
+This script simulates a basic AI-powered password guessing attack. 
+It's useful for cybersecurity education to demonstrate:
+1. How AI could potentially enhance traditional brute-force attacks
+2. The importance of complex passwords and additional security measures
+3. The concept of adaptive attacks that learn from partial successes
+
+For defense:
+- Understand potential AI-enhanced attack patterns
+- Emphasize the need for multi-factor authentication
+- Illustrate why simple password policies may not be sufficient
+
+For ethical hacking / pentesting:
+- Conceptualize more advanced, adaptive attack strategies
+- Demonstrate the potential speed increase of AI-assisted guessing
+- Highlight the importance of testing against adaptive attack patterns
+
+Remember: This is a simplified simulation. Real-world AI-based attacks 
+would be far more sophisticated and potentially harmful if misused.
+Always practice ethical hacking and obtain proper authorization.
+"""
+```
+

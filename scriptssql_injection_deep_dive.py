@@ -174,3 +174,90 @@ if __name__ == "__main__":
         print()
 ```
 
+```python
+import re
+import urllib.parse
+
+def sql_injection_checker(input_string):
+    """
+    Checks a given input string for potential SQL injection attempts.
+    
+    Args:
+    input_string (str): The string to check for SQL injection patterns
+    
+    Returns:
+    tuple: (is_suspect, reasons)
+        is_suspect (bool): True if potential SQL injection detected, False otherwise
+        reasons (list): List of reasons why the input is suspect
+    
+    Usage:
+    result, reasons = sql_injection_checker("user' OR '1'='1")
+    if result:
+        print("Potential SQL injection detected!")
+        for reason in reasons:
+            print(f"- {reason}")
+    
+    This function is useful in pentesting to identify potential vulnerabilities
+    in input handling, and in defense to validate and sanitize user inputs.
+    """
+    
+    is_suspect = False
+    reasons = []
+    
+    # List of SQL injection patterns to check
+    patterns = [
+        (r"'\s*OR\s*'?\d+'?='?\d+'?", "OR condition"),
+        (r"'\s*;\s*", "Multiple SQL statements"),
+        (r"--", "SQL comment"),
+        (r"UNION\s+SELECT", "UNION SELECT statement"),
+        (r"DROP\s+TABLE", "DROP TABLE statement"),
+        (r"INSERT\s+INTO", "INSERT INTO statement"),
+        (r"DELETE\s+FROM", "DELETE FROM statement"),
+        (r"UPDATE\s+\w+\s+SET", "UPDATE statement"),
+        (r"\bEXEC\b", "EXEC statement"),
+        (r"xp_cmdshell", "xp_cmdshell procedure"),
+    ]
+    
+    # URL decode the input string to catch encoded injection attempts
+    decoded_input = urllib.parse.unquote(input_string)
+    
+    for pattern, reason in patterns:
+        if re.search(pattern, decoded_input, re.IGNORECASE):
+            is_suspect = True
+            reasons.append(f"Detected potential {reason}")
+    
+    # Check for suspicious number of single quotes
+    if decoded_input.count("'") > 2:
+        is_suspect = True
+        reasons.append("Suspicious number of single quotes")
+    
+    # Check for SQL keywords
+    sql_keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'UNION', 'JOIN', 'HAVING', 'GROUP BY']
+    found_keywords = [keyword for keyword in sql_keywords if keyword in decoded_input.upper()]
+    if found_keywords:
+        is_suspect = True
+        reasons.append(f"SQL keywords detected: {', '.join(found_keywords)}")
+    
+    return is_suspect, reasons
+
+# Example usage
+test_inputs = [
+    "normal input",
+    "user' OR '1'='1",
+    "admin'--",
+    "SELECT%20*%20FROM%20users",
+    "1'; DROP TABLE users; --",
+    "' UNION SELECT username, password FROM users --",
+]
+
+for test_input in test_inputs:
+    result, reasons = sql_injection_checker(test_input)
+    print(f"\nChecking: {test_input}")
+    if result:
+        print("Potential SQL injection detected!")
+        for reason in reasons:
+            print(f"- {reason}")
+    else:
+        print("No SQL injection detected.")
+```
+

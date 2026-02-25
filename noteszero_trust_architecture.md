@@ -154,3 +154,48 @@ This simple firewall rule helps implement a Zero Trust approach by limiting SSH 
 
 ---
 
+## Zero Trust Architecture
+
+Zero Trust Architecture (ZTA) is a modern security model that assumes no entity, whether inside or outside the network perimeter, should be automatically trusted. This approach contrasts with traditional security models that rely on a "castle-and-moat" strategy.
+
+### Key Concepts
+
+1. **Verify Explicitly**: Always authenticate and authorize based on all available data points.
+2. **Least Privilege Access**: Limit user access with Just-In-Time and Just-Enough-Access principles.
+3. **Assume Breach**: Minimize blast radius and segment access.
+
+### Core Principles
+
+- **Never Trust, Always Verify**: Every access request is fully authenticated, authorized, and encrypted.
+- **Continuous Monitoring**: Collect and analyze data for visibility and threat detection.
+- **Micro-segmentation**: Divide security perimeters into small zones to maintain separate access for separate parts of the network.
+
+### Implementation Best Practices
+
+1. Identify sensitive data and assets
+2. Map the flows of sensitive data
+3. Architect Zero Trust network
+4. Create Zero Trust policies
+5. Monitor network and system activities
+6. Implement strong multi-factor authentication (MFA)
+
+### Real-World Example
+
+A financial institution implements ZTA:
+
+```
+1. All employees use MFA for every login
+2. Access to financial databases is granted only when needed
+3. Network is segmented, separating customer data from internal systems
+4. Continuous monitoring detects unusual access patterns
+5. Regular security assessments and updates are conducted
+```
+
+### Tip
+
+When implementing ZTA, start small. Choose a critical application or dataset and apply Zero Trust principles to it. Gradually expand to other systems as you refine your approach and gain experience.
+
+Remember, Zero Trust is not a single technology but a holistic approach to network security that requires ongoing effort and adaptation to evolving threats.
+
+---
+

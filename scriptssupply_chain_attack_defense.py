@@ -326,3 +326,113 @@ def verify_software_supply_chain(software_path, manifest_path):
 # verify_software_supply_chain("./downloaded_software.zip", "./trusted_manifest.json")
 ```
 
+```python
+import hashlib
+import os
+import json
+import time
+
+def verify_software_supply_chain(software_dir, manifest_file):
+    """
+    Verifies the integrity of software in a directory against a supplied manifest.
+    
+    This function helps defend against supply chain attacks by ensuring that
+    the software files haven't been tampered with since the manifest was created.
+    
+    Args:
+    software_dir (str): Path to the directory containing software files
+    manifest_file (str): Path to the JSON manifest file with expected hashes
+    
+    Returns:
+    tuple: (bool, list) - (True if all files match, list of mismatched files)
+    
+    Usage:
+    result, mismatches = verify_software_supply_chain("./software", "manifest.json")
+    if result:
+        print("All files verified successfully!")
+    else:
+        print("Mismatched files:", mismatches)
+    
+    Why it's useful:
+    - Detects unauthorized modifications in software supply chain
+    - Can be integrated into CI/CD pipelines for automated checks
+    - Helps maintain integrity of software before deployment
+    """
+    
+    with open(manifest_file, 'r') as f:
+        expected_hashes = json.load(f)
+    
+    mismatched_files = []
+    
+    for root, _, files in os.walk(software_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            relative_path = os.path.relpath(file_path, software_dir)
+            
+            if relative_path in expected_hashes:
+                with open(file_path, 'rb') as f:
+                    file_hash = hashlib.sha256(f.read()).hexdigest()
+                
+                if file_hash != expected_hashes[relative_path]:
+                    mismatched_files.append(relative_path)
+            else:
+                print(f"Warning: {relative_path} not found in manifest")
+    
+    return len(mismatched_files) == 0, mismatched_files
+
+def create_software_manifest(software_dir, output_file):
+    """
+    Creates a manifest file with SHA256 hashes of all files in a directory.
+    
+    This function helps in creating a baseline for software integrity checks.
+    
+    Args:
+    software_dir (str): Path to the directory containing software files
+    output_file (str): Path where the manifest JSON file will be saved
+    
+    Usage:
+    create_software_manifest("./software", "manifest.json")
+    
+    Why it's useful:
+    - Establishes a trusted baseline for software integrity
+    - Can be used in conjunction with verify_software_supply_chain()
+    - Helps in tracking changes in software over time
+    """
+    
+    manifest = {}
+    
+    for root, _, files in os.walk(software_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            relative_path = os.path.relpath(file_path, software_dir)
+            
+            with open(file_path, 'rb') as f:
+                file_hash = hashlib.sha256(f.read()).hexdigest()
+            
+            manifest[relative_path] = file_hash
+    
+    with open(output_file, 'w') as f:
+        json.dump(manifest, f, indent=4)
+
+    print(f"Manifest created: {output_file}")
+
+# Example usage
+if __name__ == "__main__":
+    software_dir = "./example_software"
+    manifest_file = "manifest.json"
+    
+    # Create a manifest
+    create_software_manifest(software_dir, manifest_file)
+    
+    # Simulate some time passing
+    time.sleep(2)
+    
+    # Verify the software against the manifest
+    result, mismatches = verify_software_supply_chain(software_dir, manifest_file)
+    
+    if result:
+        print("All files verified successfully!")
+    else:
+        print("Mismatched files:", mismatches)
+```
+

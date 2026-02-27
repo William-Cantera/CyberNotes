@@ -240,3 +240,59 @@ Always treat all user input as untrusted, including data from databases, as it m
 
 ---
 
+## XSS Prevention in Web Apps
+
+Cross-Site Scripting (XSS) is a critical security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. Preventing XSS is crucial for maintaining the security and integrity of web applications.
+
+### Key Concepts
+
+- **Reflected XSS**: Occurs when user input is immediately returned by a web application without proper sanitization.
+- **Stored XSS**: Malicious script is stored on the server and later served to other users.
+- **DOM-based XSS**: Vulnerability exists in client-side code rather than server-side.
+
+### Prevention Techniques
+
+1. **Input Validation**: Validate and sanitize all user inputs before processing or storing them.
+
+2. **Output Encoding**: Encode special characters when outputting data to prevent script execution.
+
+3. **Content Security Policy (CSP)**: Implement CSP headers to restrict sources of content that can be loaded.
+
+4. **HttpOnly Flag**: Set the HttpOnly flag on cookies to prevent access via client-side scripts.
+
+5. **X-XSS-Protection Header**: Enable built-in browser XSS protection mechanisms.
+
+### Best Practices
+
+- Use well-maintained security libraries for input validation and output encoding.
+- Implement the principle of least privilege in your application's functionality.
+- Regularly update and patch all components of your web application stack.
+- Conduct security audits and penetration testing to identify potential XSS vulnerabilities.
+
+### Real-World Example
+
+Consider a simple search feature that displays the user's query:
+
+```php
+// Vulnerable code
+echo "Search results for: " . $_GET['query'];
+
+// Secure code
+echo "Search results for: " . htmlspecialchars($_GET['query'], ENT_QUOTES, 'UTF-8');
+```
+
+In the secure version, `htmlspecialchars()` is used to encode special characters, preventing potential script execution.
+
+### Pro Tip
+
+When working with modern JavaScript frameworks like React or Vue, use their built-in escaping mechanisms. For example, in React, using curly braces `{}` to insert dynamic content automatically escapes the output:
+
+```jsx
+// React component
+return <div>Search results for: {userQuery}</div>;
+```
+
+This approach helps prevent XSS by default, but always be cautious with dynamic content insertion and use additional security measures when necessary.
+
+---
+

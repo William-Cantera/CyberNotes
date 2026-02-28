@@ -109,3 +109,54 @@ Never transmit passwords in plain text. Instead, hash them client-side before se
 
 ---
 
+## Cryptographic Hash Functions
+
+Cryptographic hash functions are fundamental tools in cybersecurity, providing a way to create fixed-size outputs (hashes) from input data of any size. These functions play a crucial role in various security applications, including:
+
+- Data integrity verification
+- Password storage
+- Digital signatures
+- Blockchain technology
+
+### Key Characteristics
+
+1. **Deterministic**: The same input always produces the same hash output.
+2. **Quick computation**: Generating a hash is fast for any given input.
+3. **Pre-image resistance**: It's computationally infeasible to reverse a hash to find its input.
+4. **Small changes, big impact**: A slight change in input results in a significantly different hash.
+5. **Collision resistance**: It's extremely difficult to find two different inputs that produce the same hash.
+
+### Common Hash Functions
+
+- MD5 (128-bit) - No longer considered secure
+- SHA-1 (160-bit) - Deprecated due to vulnerabilities
+- SHA-256 (256-bit) - Widely used, part of the SHA-2 family
+- SHA-3 (224, 256, 384, or 512-bit) - Newest standard, high security
+
+### Best Practices
+
+1. Use cryptographically secure hash functions (e.g., SHA-256 or higher).
+2. Regularly update hash algorithms as older ones become vulnerable.
+3. When storing passwords, always use salting in conjunction with hashing.
+4. Verify file integrity using hash checksums before installation or execution.
+
+### Real-World Example: File Integrity
+
+To verify a downloaded file's integrity:
+
+1. The provider publishes the file's hash.
+2. After downloading, generate the file's hash locally.
+3. Compare the two hashes; they should match exactly.
+
+```bash
+# Generate SHA-256 hash of a file
+sha256sum filename.zip
+
+# Output
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  filename.zip
+```
+
+By understanding and correctly implementing cryptographic hash functions, cybersecurity professionals can significantly enhance data security and integrity in various applications and systems.
+
+---
+

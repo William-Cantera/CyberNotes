@@ -233,3 +233,63 @@ SQL injection remains a prevalent threat due to its potential for severe impact 
 
 ---
 
+## SQL Injection Deep Dive
+
+SQL Injection is a critical web application vulnerability that allows attackers to manipulate database queries by injecting malicious SQL code. This technique can lead to unauthorized data access, modification, or deletion.
+
+### Key Concepts
+
+1. **Input Validation Failure**: SQL Injection occurs when user input is not properly sanitized before being used in SQL queries.
+
+2. **Query Manipulation**: Attackers can alter the logic of SQL queries by adding their own SQL statements.
+
+3. **Privilege Escalation**: In some cases, SQL Injection can lead to elevated database privileges or even OS-level access.
+
+### Common SQL Injection Techniques
+
+- **Union-Based**: Combines the results of two or more SELECT statements.
+- **Error-Based**: Extracts data by forcing the database to generate error messages.
+- **Blind SQL Injection**: Infers data by observing the application's behavior to true/false questions.
+- **Time-Based**: Relies on the database pausing for a specified amount of time to infer information.
+
+### Prevention Best Practices
+
+1. Use parameterized queries or prepared statements.
+2. Implement input validation and sanitization.
+3. Apply the principle of least privilege for database accounts.
+4. Employ Web Application Firewalls (WAF) for additional protection.
+
+### Real-World Example
+
+Consider this vulnerable PHP code:
+
+```php
+$username = $_POST['username'];
+$query = "SELECT * FROM users WHERE username = '$username'";
+```
+
+An attacker could input: `' OR '1'='1` as the username, resulting in the query:
+
+```sql
+SELECT * FROM users WHERE username = '' OR '1'='1'
+```
+
+This would return all users, potentially exposing sensitive data.
+
+### Defensive Coding
+
+To prevent this, use prepared statements:
+
+```php
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->execute([$username]);
+```
+
+### Testing Tip
+
+When assessing for SQL Injection, try inputting special characters like `'`, `"`, `)`, and `--` in form fields. Unexpected behavior or error messages may indicate potential vulnerabilities.
+
+Remember, SQL Injection remains a prevalent threat. Regular security assessments and following secure coding practices are crucial for maintaining robust web applications.
+
+---
+

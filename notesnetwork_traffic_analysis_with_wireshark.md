@@ -184,3 +184,57 @@ Wireshark is an essential tool for network analysis and security. By understandi
 
 ---
 
+## Network Traffic Analysis with Wireshark
+
+### Introduction
+Wireshark is a powerful, open-source network protocol analyzer used for network troubleshooting, analysis, and security auditing. It allows cybersecurity professionals to capture and inspect network traffic in real-time, providing deep insights into network communications.
+
+### Key Concepts
+
+1. **Packet Capture**: Wireshark can capture packets from a live network or read from a previously saved capture file.
+
+2. **Protocol Dissection**: It automatically recognizes and color-codes different protocols, making it easier to identify specific types of traffic.
+
+3. **Filtering**: Wireshark offers robust filtering capabilities to isolate specific packets based on various criteria.
+
+4. **Statistical Analysis**: It provides tools for analyzing traffic patterns, protocol usage, and network performance.
+
+### Best Practices
+
+- Start with a clear objective for your analysis
+- Use capture filters to reduce the amount of data collected
+- Leverage display filters to focus on relevant traffic
+- Regularly update Wireshark to ensure support for new protocols and security fixes
+
+### Real-World Example: Detecting HTTP Traffic
+
+To capture and analyze HTTP traffic:
+
+1. Start Wireshark and select the appropriate network interface
+2. Apply a capture filter: `tcp port 80`
+3. Start the capture and generate some HTTP traffic
+4. Stop the capture and apply a display filter: `http`
+5. Examine the captured packets, focusing on HTTP requests and responses
+
+### Tip: Using Display Filters
+
+Wireshark's display filters are powerful tools for narrowing down captured traffic. Here's a simple example to filter for DNS traffic:
+
+```
+dns
+```
+
+For more complex filtering, you can combine multiple conditions:
+
+```
+ip.src == 192.168.1.100 and tcp.port == 443
+```
+
+This filter shows only HTTPS traffic from the IP address 192.168.1.100.
+
+### Conclusion
+
+Wireshark is an essential tool for network analysis, offering deep insights into network communications. By mastering its features, cybersecurity professionals can effectively troubleshoot network issues, detect security threats, and gain a comprehensive understanding of network behavior.
+
+---
+

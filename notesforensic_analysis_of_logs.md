@@ -58,3 +58,50 @@ Remember, log analysis is both an art and a science. While tools can help, human
 
 ---
 
+## Forensic Analysis of Logs
+
+### Key Concepts
+
+- **Log Analysis**: The process of examining system, application, and network logs to identify security incidents, system problems, or unusual activities.
+- **Log Sources**: Various systems generate logs, including operating systems, applications, firewalls, and intrusion detection systems.
+- **Timeline Construction**: Piecing together events chronologically to understand the sequence of actions during an incident.
+
+### Best Practices
+
+1. **Centralized Log Collection**: Implement a centralized log management system to aggregate logs from multiple sources.
+2. **Log Retention**: Maintain logs for an appropriate period, typically 6-12 months, depending on compliance requirements.
+3. **Time Synchronization**: Ensure all systems use synchronized time sources (e.g., NTP) for accurate event correlation.
+4. **Log Integrity**: Implement measures to prevent log tampering, such as using write-once media or digital signatures.
+5. **Regular Review**: Conduct routine log reviews to identify potential issues before they escalate.
+
+### Analysis Techniques
+
+- **Pattern Recognition**: Look for known patterns of malicious activity or anomalies.
+- **Correlation**: Connect events across multiple log sources to gain a comprehensive view.
+- **Filtering**: Use grep, awk, or specialized tools to isolate relevant log entries.
+
+### Example: Investigating a Brute Force Attack
+
+1. Examine authentication logs (e.g., `/var/log/auth.log` on Linux systems).
+2. Look for multiple failed login attempts from the same IP address:
+
+   ```bash
+   grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
+   ```
+
+3. Analyze the timing and frequency of attempts.
+4. Cross-reference with firewall logs to check for any blocked IPs.
+5. Investigate successful logins immediately following failed attempts.
+
+### Tip: Log Analysis Tools
+
+Utilize specialized tools for more efficient analysis:
+
+- **Splunk**: Enterprise-grade log management and analysis platform.
+- **ELK Stack**: Open-source suite combining Elasticsearch, Logstash, and Kibana.
+- **Graylog**: Open-source log management with a user-friendly interface.
+
+Remember, effective log analysis requires a good understanding of normal system behavior to accurately identify anomalies and potential security incidents.
+
+---
+

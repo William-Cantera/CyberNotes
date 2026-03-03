@@ -436,3 +436,109 @@ if __name__ == "__main__":
         print("Mismatched files:", mismatches)
 ```
 
+```python
+import hashlib
+import os
+import json
+import time
+
+def check_software_integrity(software_dir, manifest_file):
+    """
+    Checks the integrity of software files against a known-good manifest.
+    
+    This function helps detect potential supply chain attacks by verifying
+    that installed software files match their expected cryptographic hashes.
+    
+    Args:
+    software_dir (str): Directory containing the software files to check
+    manifest_file (str): Path to JSON manifest file with expected file hashes
+    
+    Returns:
+    list: List of any files that failed the integrity check
+    
+    Usage:
+    failed_files = check_software_integrity("/path/to/software", "manifest.json")
+    if failed_files:
+        print("Warning: Possible supply chain attack detected!")
+        for file in failed_files:
+            print(f"Integrity check failed for: {file}")
+    else:
+        print("All files passed integrity check.")
+    """
+    
+    # Load the manifest file
+    with open(manifest_file, 'r') as f:
+        manifest = json.load(f)
+    
+    failed_files = []
+    
+    # Iterate through all files in the software directory
+    for root, _, files in os.walk(software_dir):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            rel_path = os.path.relpath(filepath, software_dir)
+            
+            # Skip files not in the manifest
+            if rel_path not in manifest:
+                continue
+            
+            # Calculate the SHA256 hash of the file
+            with open(filepath, 'rb') as f:
+                file_hash = hashlib.sha256(f.read()).hexdigest()
+            
+            # Compare the calculated hash with the expected hash
+            if file_hash != manifest[rel_path]:
+                failed_files.append(rel_path)
+    
+    return failed_files
+
+def generate_manifest(software_dir, output_file):
+    """
+    Generates a manifest file with SHA256 hashes of all files in a directory.
+    
+    This function can be used to create a "known-good" manifest for later
+    integrity checking. It should be run in a secure environment before
+    deploying software.
+    
+    Args:
+    software_dir (str): Directory containing the software files
+    output_file (str): Path to save the generated manifest JSON file
+    
+    Usage:
+    generate_manifest("/path/to/clean/software", "manifest.json")
+    """
+    
+    manifest = {}
+    
+    for root, _, files in os.walk(software_dir):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            rel_path = os.path.relpath(filepath, software_dir)
+            
+            with open(filepath, 'rb') as f:
+                file_hash = hashlib.sha256(f.read()).hexdigest()
+            
+            manifest[rel_path] = file_hash
+    
+    with open(output_file, 'w') as f:
+        json.dump(manifest, f, indent=2)
+
+# Example usage
+if __name__ == "__main__":
+    # Generate a manifest for a "known-good" software directory
+    generate_manifest("./clean_software", "manifest.json")
+    
+    # Simulate some time passing
+    time.sleep(2)
+    
+    # Check the integrity of the software directory
+    failed = check_software_integrity("./clean_software", "manifest.json")
+    
+    if failed:
+        print("Warning: Possible supply chain attack detected!")
+        for file in failed:
+            print(f"Integrity check failed for: {file}")
+    else:
+        print("All files passed integrity check.")
+```
+

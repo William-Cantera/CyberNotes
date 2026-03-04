@@ -64,3 +64,75 @@ if __name__ == "__main__":
     edr_sim()
 ```
 
+```python
+import os
+import hashlib
+import time
+import logging
+
+# Set up logging
+logging.basicConfig(filename='edr_sim.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+def simulate_edr():
+    """
+    Simulates basic Endpoint Detection and Response (EDR) functionality.
+    This function monitors a specified directory for file changes and logs suspicious activity.
+    
+    Usage:
+    Call this function and let it run in the background to monitor a directory.
+    
+    Why it's useful:
+    - Demonstrates basic file system monitoring concepts used in EDR solutions
+    - Helps understand how EDR tools detect and log potential threats
+    - Can be used to test and verify security monitoring setups
+    """
+    
+    MONITORED_DIR = "C:\\Users\\Public"  # Directory to monitor
+    SCAN_INTERVAL = 5  # Seconds between scans
+    file_hashes = {}  # Store file hashes
+    
+    print(f"Starting EDR simulation. Monitoring: {MONITORED_DIR}")
+    logging.info("EDR simulation started")
+    
+    try:
+        while True:
+            for root, _, files in os.walk(MONITORED_DIR):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    try:
+                        # Calculate file hash
+                        with open(file_path, "rb") as f:
+                            file_hash = hashlib.md5(f.read()).hexdigest()
+                        
+                        # Check if file is new or modified
+                        if file_path not in file_hashes:
+                            logging.info(f"New file detected: {file_path}")
+                            file_hashes[file_path] = file_hash
+                        elif file_hashes[file_path] != file_hash:
+                            logging.warning(f"File modified: {file_path}")
+                            file_hashes[file_path] = file_hash
+                        
+                        # Example: Flag executable files as suspicious
+                        if file.endswith(('.exe', '.dll', '.bat')):
+                            logging.warning(f"Suspicious file detected: {file_path}")
+                    
+                    except Exception as e:
+                        logging.error(f"Error processing file {file_path}: {str(e)}")
+            
+            # Check for deleted files
+            for file_path in list(file_hashes.keys()):
+                if not os.path.exists(file_path):
+                    logging.info(f"File deleted: {file_path}")
+                    del file_hashes[file_path]
+            
+            time.sleep(SCAN_INTERVAL)
+    
+    except KeyboardInterrupt:
+        print("EDR simulation stopped.")
+        logging.info("EDR simulation stopped")
+
+if __name__ == "__main__":
+    simulate_edr()
+```
+

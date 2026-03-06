@@ -105,3 +105,52 @@ Remember, effective log analysis requires a good understanding of normal system 
 
 ---
 
+## Forensic Analysis of Logs
+
+### Key Concepts
+
+- Log forensics is the process of examining log files to investigate security incidents, system failures, or suspicious activities.
+- Logs serve as a digital trail, providing crucial information about system events, user actions, and network traffic.
+- Common log sources include operating systems, applications, firewalls, and intrusion detection systems.
+
+### Importance of Log Analysis
+
+- Helps in reconstructing events during a security incident
+- Assists in identifying the root cause of system failures
+- Supports compliance requirements and auditing processes
+- Aids in detecting and investigating security breaches
+
+### Best Practices
+
+1. **Centralized Log Management**: Collect logs from various sources into a centralized system for easier analysis.
+2. **Log Retention**: Maintain logs for an appropriate period as per legal and organizational requirements.
+3. **Time Synchronization**: Ensure all systems use synchronized time for accurate event correlation.
+4. **Log Integrity**: Implement measures to prevent log tampering and ensure chain of custody.
+5. **Regular Review**: Conduct routine log reviews to identify potential issues proactively.
+
+### Analysis Techniques
+
+- **Pattern Recognition**: Look for unusual patterns or deviations from normal behavior.
+- **Correlation**: Connect events across different log sources to build a comprehensive picture.
+- **Timeline Analysis**: Create a chronological sequence of events to understand the incident flow.
+- **Filtering**: Use grep, awk, or specialized tools to filter relevant information from large log files.
+
+### Example: Investigating a Potential Data Breach
+
+Suppose a company suspects unauthorized access to a critical server. An analyst might:
+
+1. Collect relevant logs (e.g., server access logs, firewall logs)
+2. Use a command like:
+   ```
+   grep "Failed login" /var/log/auth.log | awk '{print $1,$2,$3,$11}' | sort | uniq -c | sort -nr
+   ```
+   This command finds failed login attempts, extracts relevant information, and sorts by frequency.
+3. Analyze the output to identify potential brute-force attempts or suspicious IP addresses.
+4. Correlate findings with other log sources to confirm the breach and trace the attacker's actions.
+
+### Tip
+
+Always create a copy of original log files before analysis to preserve evidence integrity. Use write-blockers when necessary to prevent accidental modifications.
+
+---
+

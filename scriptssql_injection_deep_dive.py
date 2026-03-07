@@ -261,3 +261,98 @@ for test_input in test_inputs:
         print("No SQL injection detected.")
 ```
 
+```python
+import re
+import urllib.parse
+
+def sql_injection_scanner(url, params):
+    """
+    Scans a URL and its parameters for potential SQL injection vulnerabilities.
+    
+    Args:
+    url (str): The base URL to scan
+    params (dict): A dictionary of parameter names and values
+    
+    Returns:
+    list: A list of potentially vulnerable parameters
+    
+    This function is useful for identifying potential SQL injection points
+    during penetration testing or security audits. It helps defenders 
+    understand how attackers might probe for vulnerabilities.
+    
+    Usage example:
+    url = "http://example.com/search"
+    params = {"q": "user input", "sort": "date"}
+    vulnerable_params = sql_injection_scanner(url, params)
+    """
+    
+    vulnerable_params = []
+    payloads = [
+        "' OR '1'='1",
+        "1 OR 1=1",
+        "' UNION SELECT NULL--",
+        '" OR ""="',
+        "1' ORDER BY 1--",
+        "1 AND 1=1",
+        "' AND '1'='1",
+        "1; DROP TABLE users--",
+    ]
+    
+    for param, value in params.items():
+        for payload in payloads:
+            # Construct the test URL
+            test_params = params.copy()
+            test_params[param] = payload
+            test_url = url + "?" + urllib.parse.urlencode(test_params)
+            
+            # Simulate sending a request (in a real scenario, you'd use requests library)
+            print(f"Testing: {test_url}")
+            
+            # Check for common SQL error patterns in the response
+            # (In a real scenario, you'd analyze the actual HTTP response)
+            error_patterns = [
+                r"SQL syntax.*MySQL",
+                r"Warning.*mysql_.*",
+                r"valid MySQL result",
+                r"MySqlClient\.",
+                r"ORA-[0-9][0-9][0-9][0-9]",
+                r"Oracle error",
+                r"Microsoft SQL Server",
+                r"ODBC Driver.*SQL Server",
+                r"SQLite/JDBCDriver",
+                r"SQLite.Exception",
+                r"System.Data.SQLite.SQLiteException",
+                r"PostgreSQL.*ERROR",
+                r"Warning.*\Wpg_.*",
+                r"valid PostgreSQL result",
+            ]
+            
+            # Simulate checking response for SQL errors
+            # (In a real scenario, you'd check the actual HTTP response content)
+            mock_response = "Some content... valid MySQL result ... More content"
+            
+            for pattern in error_patterns:
+                if re.search(pattern, mock_response, re.IGNORECASE):
+                    if param not in vulnerable_params:
+                        vulnerable_params.append(param)
+                    break
+    
+    return vulnerable_params
+
+# Example usage
+if __name__ == "__main__":
+    test_url = "http://example.com/search"
+    test_params = {
+        "q": "user input",
+        "sort": "date",
+        "page": "1"
+    }
+    
+    results = sql_injection_scanner(test_url, test_params)
+    
+    if results:
+        print("Potentially vulnerable parameters:", results)
+    else:
+        print("No obvious vulnerabilities detected.")
+```
+

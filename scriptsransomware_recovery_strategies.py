@@ -112,3 +112,75 @@ if __name__ == "__main__":
 # for thorough ransomware recovery strategies.
 ```
 
+```python
+import os
+import hashlib
+import time
+
+def ransomware_recovery_simulation(directory):
+    """
+    Simulates a ransomware recovery process by scanning a directory,
+    identifying potentially encrypted files, and demonstrating
+    recovery steps.
+
+    Args:
+    directory (str): Path to the directory to scan
+
+    This script is useful for:
+    - Understanding how ransomware affects file systems
+    - Practicing file system analysis and recovery techniques
+    - Demonstrating the importance of backups and detection mechanisms
+
+    Usage:
+    ransomware_recovery_simulation("/path/to/directory")
+    """
+
+    def is_potentially_encrypted(file_path):
+        """Check if a file might be encrypted based on entropy"""
+        with open(file_path, 'rb') as f:
+            data = f.read(1024)  # Read first 1KB
+        entropy = 0
+        for x in range(256):
+            p_x = float(data.count(x))/len(data)
+            if p_x > 0:
+                entropy += - p_x*math.log(p_x, 2)
+        return entropy > 7.5  # High entropy threshold
+
+    def simulate_decryption(file_path):
+        """Simulate decryption of a file (for demonstration only)"""
+        print(f"Simulating decryption of {file_path}")
+        time.sleep(1)  # Simulate decryption time
+
+    encrypted_files = []
+    total_files = 0
+
+    print("Scanning directory for potentially encrypted files...")
+    for root, _, files in os.walk(directory):
+        for file in files:
+            total_files += 1
+            file_path = os.path.join(root, file)
+            if is_potentially_encrypted(file_path):
+                encrypted_files.append(file_path)
+
+    print(f"\nScan complete. Found {len(encrypted_files)} potentially encrypted files out of {total_files} total files.")
+
+    if encrypted_files:
+        print("\nSimulating recovery process:")
+        for file in encrypted_files:
+            simulate_decryption(file)
+        
+        print("\nRecovery simulation complete.")
+        print("In a real scenario, you would:")
+        print("1. Isolate the infected system")
+        print("2. Report the incident to authorities")
+        print("3. Attempt to decrypt files using known decryptors")
+        print("4. Restore from clean backups if available")
+    else:
+        print("\nNo potentially encrypted files found. System appears unaffected.")
+
+    print("\nRemember: Regular backups and security updates are crucial for ransomware defense!")
+
+# Example usage:
+# ransomware_recovery_simulation("/path/to/test/directory")
+```
+

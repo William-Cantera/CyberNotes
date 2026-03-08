@@ -102,3 +102,51 @@ By implementing these mitigation strategies, organizations can significantly red
 
 ---
 
+## Password Cracking Mitigation
+
+Password cracking is a significant threat to cybersecurity, but there are several effective mitigation strategies:
+
+### Key Concepts
+
+1. **Password Complexity**: Increasing the complexity of passwords makes them harder to crack.
+2. **Hashing**: Proper password storage using strong hashing algorithms.
+3. **Salt**: Adding unique random data to each password before hashing.
+4. **Rate Limiting**: Restricting the number of login attempts.
+5. **Multi-Factor Authentication (MFA)**: Adding an extra layer of security beyond passwords.
+
+### Best Practices
+
+- Implement a strong password policy:
+  - Minimum length of 12 characters
+  - Mix of uppercase, lowercase, numbers, and special characters
+  - Avoid common words or phrases
+
+- Use modern hashing algorithms:
+  - bcrypt, Argon2, or PBKDF2
+  - Avoid MD5 or SHA-1, which are considered weak
+
+- Always salt passwords:
+  ```python
+  import bcrypt
+  
+  password = "user_password"
+  salt = bcrypt.gensalt()
+  hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+  ```
+
+- Implement account lockouts after multiple failed attempts
+- Encourage or require the use of password managers
+- Regularly update and patch systems to address known vulnerabilities
+
+### Real-World Example
+
+In 2012, LinkedIn suffered a major breach where 6.5 million unsalted SHA-1 password hashes were leaked. The weak hashing algorithm and lack of salting allowed attackers to crack many passwords quickly. Had LinkedIn used a stronger algorithm like bcrypt and properly salted their passwords, the impact of the breach would have been significantly reduced.
+
+### Tip
+
+Consider implementing a password strength meter on user registration forms. This visual feedback can encourage users to create stronger passwords voluntarily, improving overall security without enforcing overly strict policies that users might try to circumvent.
+
+By implementing these mitigation strategies, organizations can significantly reduce the risk of successful password cracking attempts and protect their users' accounts more effectively.
+
+---
+

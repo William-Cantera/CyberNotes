@@ -146,3 +146,49 @@ By correlating these events, you can often reconstruct the attack chain and impr
 
 ---
 
+## Endpoint Detection and Response (EDR)
+
+Endpoint Detection and Response (EDR) is a critical cybersecurity technology that focuses on monitoring and responding to threats at the endpoint level, such as individual computers, mobile devices, and servers.
+
+### Key Concepts
+
+- **Real-time Monitoring**: EDR solutions continuously monitor endpoint activities for suspicious behavior.
+- **Threat Detection**: Uses advanced analytics and machine learning to identify potential security incidents.
+- **Incident Response**: Provides tools for rapid investigation and remediation of detected threats.
+- **Data Collection**: Gathers and stores endpoint data for forensic analysis and threat hunting.
+
+### How EDR Works
+
+1. **Data Collection**: EDR agents collect data on system events, file changes, network connections, and user activities.
+2. **Analysis**: Collected data is analyzed using behavioral analytics and threat intelligence.
+3. **Alert Generation**: Suspicious activities trigger alerts for security teams.
+4. **Investigation**: Security analysts investigate alerts using EDR tools.
+5. **Response**: Automated or manual actions are taken to contain and remediate threats.
+
+### Best Practices
+
+- Implement EDR as part of a layered security approach
+- Regularly update EDR software and threat intelligence feeds
+- Train security teams on EDR tools and incident response procedures
+- Integrate EDR with other security solutions (SIEM, firewalls, etc.)
+- Conduct periodic threat hunting using EDR data
+
+### Real-World Example
+
+A company's EDR solution detects a series of failed login attempts on an employee's laptop, followed by the creation of a new admin account. The EDR automatically isolates the laptop from the network and alerts the security team, who then investigate and find that the laptop was compromised through a phishing attack.
+
+### Tip: EDR Log Analysis
+
+When investigating an incident, use EDR logs to create a timeline of events:
+
+```
+$ grep "suspicious_process" edr_logs.txt | sort -k1,2
+2023-04-15 09:23:15 Suspicious process 'malware.exe' created
+2023-04-15 09:23:18 Suspicious process attempted network connection
+2023-04-15 09:23:20 Suspicious process accessed sensitive file
+```
+
+This simple command can help quickly identify the sequence of malicious activities during an incident.
+
+---
+

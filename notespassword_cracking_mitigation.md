@@ -150,3 +150,67 @@ By implementing these mitigation strategies, organizations can significantly red
 
 ---
 
+## Password Cracking Mitigation
+
+Password cracking is a significant threat to cybersecurity. Implementing effective mitigation strategies is crucial to protect user accounts and sensitive information.
+
+### Key Concepts
+
+- **Password Complexity**: Enforcing strong password policies
+- **Hashing**: Securely storing passwords using cryptographic hash functions
+- **Salt**: Adding random data to passwords before hashing
+- **Rate Limiting**: Restricting the number of login attempts
+- **Multi-Factor Authentication (MFA)**: Requiring additional verification beyond passwords
+
+### Best Practices
+
+1. **Implement Strong Password Policies**
+   - Require minimum length (e.g., 12+ characters)
+   - Mandate a mix of uppercase, lowercase, numbers, and special characters
+   - Prohibit common words and patterns
+
+2. **Use Modern Hashing Algorithms**
+   - Employ algorithms like bcrypt, Argon2, or PBKDF2
+   - Avoid outdated algorithms like MD5 or SHA-1
+
+3. **Salt and Pepper**
+   - Use unique salts for each password
+   - Consider implementing a pepper (server-side secret)
+
+4. **Enforce Rate Limiting**
+   - Implement exponential backoff for failed login attempts
+   - Consider account lockouts after multiple failures
+
+5. **Enable Multi-Factor Authentication**
+   - Offer various MFA options (e.g., SMS, authenticator apps, hardware tokens)
+   - Require MFA for sensitive operations or high-privilege accounts
+
+### Example: Secure Password Storage
+
+```python
+import bcrypt
+
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed
+
+def verify_password(password, hashed):
+    return bcrypt.checkpw(password.encode('utf-8'), hashed)
+
+# Usage
+user_password = "SecureP@ssw0rd123"
+stored_hash = hash_password(user_password)
+
+# Later, when verifying:
+is_valid = verify_password(user_password, stored_hash)
+```
+
+### Real-World Tip
+
+Many organizations use password managers to generate and store complex, unique passwords for each account. Encourage users to adopt password managers, as they significantly reduce the risk of password reuse and weak passwords.
+
+By implementing these mitigation strategies, organizations can greatly reduce the risk of successful password cracking attempts and enhance overall account security.
+
+---
+

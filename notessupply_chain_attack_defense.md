@@ -264,3 +264,51 @@ Defending against supply chain attacks requires vigilance, comprehensive securit
 
 ---
 
+## Supply Chain Attack Defense
+
+Supply chain attacks target the less-secure elements in a supply network to compromise the end target. Defending against these sophisticated threats requires a multi-layered approach.
+
+### Key Concepts
+
+1. **Vendor Risk Management**: Assessing and monitoring the security posture of all suppliers and partners.
+2. **Software Composition Analysis (SCA)**: Identifying and tracking third-party components in software.
+3. **Integrity Verification**: Ensuring the authenticity and integrity of received software and hardware.
+4. **Least Privilege**: Limiting access rights for applications, systems, and processes.
+
+### Best Practices
+
+- Implement a robust vendor security assessment program
+- Regularly audit and update the inventory of all third-party components
+- Use code signing and verify digital signatures for all software updates
+- Employ network segmentation to isolate critical systems
+- Implement a patch management strategy to address vulnerabilities quickly
+- Utilize secure software development practices, including secure coding and code reviews
+
+### Real-world Example: SolarWinds Attack
+
+The SolarWinds attack in 2020 demonstrated the far-reaching impact of supply chain compromises. Attackers inserted malicious code into SolarWinds' Orion software update, which was then distributed to thousands of customers.
+
+#### Lessons Learned:
+- Importance of verifying the integrity of software updates
+- Need for continuous monitoring of network traffic for anomalies
+- Critical role of segmentation in limiting the spread of compromises
+
+### Practical Tip: Implement Software Bill of Materials (SBOM)
+
+An SBOM is a formal record containing the details and supply chain relationships of various components used in building software. Implementing SBOMs can significantly enhance visibility into potential vulnerabilities.
+
+Example SBOM entry:
+
+```json
+{
+  "component": "log4j-core",
+  "version": "2.14.1",
+  "supplier": "Apache Software Foundation",
+  "hash": "f8b5f45d50254781234567890abcdef"
+}
+```
+
+By maintaining an up-to-date SBOM, organizations can quickly identify and respond to vulnerabilities in third-party components, enhancing their overall security posture against supply chain attacks.
+
+---
+

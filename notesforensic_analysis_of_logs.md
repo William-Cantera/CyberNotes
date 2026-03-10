@@ -154,3 +154,55 @@ Always create a copy of original log files before analysis to preserve evidence 
 
 ---
 
+## Forensic Analysis of Logs
+
+### Key Concepts
+
+- **Log Analysis**: The process of examining logs to identify security incidents, system issues, or unusual activities.
+- **Log Types**: Common logs include system logs, application logs, security logs, and network logs.
+- **Timeline Creation**: Reconstructing the sequence of events using timestamp data from various logs.
+- **Correlation**: Linking information from multiple log sources to gain a comprehensive view of an incident.
+
+### Best Practices
+
+1. **Centralized Log Collection**: Implement a centralized log management system to aggregate logs from various sources.
+2. **Log Retention**: Maintain logs for an appropriate duration based on legal and operational requirements.
+3. **Time Synchronization**: Ensure all systems use synchronized time sources (e.g., NTP) for accurate event sequencing.
+4. **Baseline Establishment**: Create a baseline of normal system behavior to easily identify anomalies.
+5. **Regular Review**: Conduct routine log reviews to detect potential issues early.
+
+### Analysis Techniques
+
+- **Pattern Recognition**: Identify recurring patterns or anomalies in log entries.
+- **Filtering**: Use grep, awk, or specialized log analysis tools to filter relevant information.
+- **Visualization**: Employ data visualization techniques to spot trends or unusual activities.
+
+### Real-world Example
+
+Investigating a potential data breach:
+
+1. Collect relevant logs (e.g., firewall, IDS, authentication logs).
+2. Create a timeline of events:
+
+```
+2023-06-15 02:14:23 - Multiple failed login attempts (auth.log)
+2023-06-15 02:17:56 - Successful login from unusual IP (auth.log)
+2023-06-15 02:18:30 - Large data transfer to external IP (firewall.log)
+2023-06-15 02:20:15 - Database query retrieving sensitive data (db.log)
+```
+
+3. Correlate events across logs to understand the attack progression.
+4. Identify the attacker's actions and potential data exfiltration.
+
+### Tip
+
+When analyzing logs, pay special attention to:
+- Failed login attempts followed by successful logins
+- Unusual access times or locations
+- Large data transfers, especially to external IPs
+- Modification of system files or configurations
+
+Remember, log analysis is an iterative process. Start with a broad view and progressively narrow your focus as you uncover more information about the incident or anomaly.
+
+---
+

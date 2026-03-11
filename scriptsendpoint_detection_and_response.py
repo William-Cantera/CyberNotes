@@ -136,3 +136,71 @@ if __name__ == "__main__":
     simulate_edr()
 ```
 
+```python
+import os
+import psutil
+import datetime
+import logging
+
+# Set up logging
+logging.basicConfig(filename='edr_simulator.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+def simulate_edr():
+    """
+    Simulates basic Endpoint Detection and Response (EDR) functionality.
+    
+    This function monitors system processes, checks for suspicious activities,
+    and logs potential security events. It's useful for understanding EDR concepts
+    and testing defense mechanisms.
+
+    Usage:
+    Simply call the function to start the simulation. Press Ctrl+C to stop.
+
+    Note: This is a simplified simulation for educational purposes only and
+    should not be used as a real security tool.
+    """
+    
+    print("Starting EDR simulation. Press Ctrl+C to stop.")
+    logging.info("EDR simulation started")
+
+    try:
+        while True:
+            # Monitor running processes
+            for proc in psutil.process_iter(['pid', 'name', 'username', 'cmdline']):
+                try:
+                    # Check for suspicious process names
+                    if any(susp in proc.info['name'].lower() for susp in ['hack', 'exploit', 'mal']):
+                        logging.warning(f"Suspicious process detected: {proc.info}")
+                    
+                    # Check for unusual system binaries location
+                    if proc.info['name'] in ['cmd.exe', 'powershell.exe'] and \
+                       not proc.info['exe'].startswith(r'C:\Windows\System32'):
+                        logging.warning(f"System binary in unusual location: {proc.info}")
+                    
+                    # Check for processes running as SYSTEM
+                    if proc.info['username'] == 'NT AUTHORITY\\SYSTEM' and \
+                       proc.info['name'] not in ['svchost.exe', 'services.exe']:
+                        logging.warning(f"Unusual process running as SYSTEM: {proc.info}")
+
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+
+            # Monitor file system for suspicious activities
+            suspicious_extensions = ['.exe', '.dll', '.bat', '.ps1']
+            for root, dirs, files in os.walk(r'C:\Users'):
+                for file in files:
+                    if any(file.endswith(ext) for ext in suspicious_extensions):
+                        full_path = os.path.join(root, file)
+                        creation_time = datetime.datetime.fromtimestamp(os.path.getctime(full_path))
+                        if (datetime.datetime.now() - creation_time).seconds < 60:
+                            logging.warning(f"Suspicious file created: {full_path}")
+
+    except KeyboardInterrupt:
+        print("\nEDR simulation stopped.")
+        logging.info("EDR simulation stopped")
+
+if __name__ == "__main__":
+    simulate_edr()
+```
+

@@ -91,3 +91,63 @@ By combining these techniques and maintaining vigilance, organizations can signi
 
 ---
 
+## Phishing Detection Techniques
+
+Phishing remains one of the most prevalent cyber threats. Understanding and implementing effective detection techniques is crucial for cybersecurity professionals.
+
+### Key Concepts
+
+1. **Email Header Analysis**: Scrutinize email headers for inconsistencies or suspicious origins.
+2. **URL Inspection**: Examine embedded links for suspicious domains or URL shorteners.
+3. **Content Analysis**: Analyze email content for common phishing indicators.
+4. **Machine Learning Models**: Utilize AI to identify patterns and anomalies in large datasets.
+
+### Common Detection Methods
+
+#### 1. DMARC, DKIM, and SPF
+These email authentication protocols help verify the legitimacy of the sender:
+- **DMARC** (Domain-based Message Authentication, Reporting, and Conformance)
+- **DKIM** (DomainKeys Identified Mail)
+- **SPF** (Sender Policy Framework)
+
+#### 2. Blacklists and Whitelists
+Maintain and regularly update lists of known malicious and trusted sources.
+
+#### 3. Heuristic Analysis
+Use rule-based systems to flag suspicious characteristics, such as:
+- Urgent language
+- Requests for sensitive information
+- Mismatched sender names and email addresses
+
+#### 4. Visual Similarity Detection
+Identify lookalike domains or webpage designs mimicking legitimate sites.
+
+### Best Practices
+
+- Implement multi-layered detection systems
+- Regularly update detection rules and databases
+- Conduct ongoing user education and awareness training
+- Perform periodic phishing simulations
+
+### Real-World Tip
+
+When inspecting a suspicious URL, use the `whois` command to gather information about the domain registration:
+
+```bash
+whois suspicious-domain.com
+```
+
+This can reveal recently registered domains or those with hidden ownership information, both common in phishing attacks.
+
+### Machine Learning in Phishing Detection
+
+Advanced systems use ML algorithms to improve detection accuracy:
+
+- Natural Language Processing (NLP) for content analysis
+- Image recognition for detecting fake logos or UI elements
+- Behavioral analysis to identify unusual patterns in user interactions
+
+By combining these techniques with traditional methods, organizations can significantly enhance their phishing detection capabilities and protect against evolving threats.
+
+---
+

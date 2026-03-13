@@ -214,3 +214,72 @@ By implementing these mitigation strategies, organizations can greatly reduce th
 
 ---
 
+## Password Cracking Mitigation
+
+Password cracking is a significant threat to cybersecurity. Implementing effective mitigation strategies is crucial to protect user accounts and sensitive information.
+
+### Key Concepts
+
+1. **Password Complexity**: Enforcing strong password policies
+2. **Salting and Hashing**: Secure storage of passwords
+3. **Rate Limiting**: Preventing brute-force attacks
+4. **Multi-Factor Authentication (MFA)**: Adding extra layers of security
+
+### Best Practices
+
+#### 1. Enforce Strong Password Policies
+
+- Require minimum length (e.g., 12+ characters)
+- Mix uppercase, lowercase, numbers, and special characters
+- Prohibit common words and patterns
+- Implement password history to prevent reuse
+
+#### 2. Secure Password Storage
+
+- Use strong cryptographic hash functions (e.g., bcrypt, Argon2)
+- Always salt passwords before hashing
+- Example of salting and hashing in Python:
+
+```python
+import bcrypt
+
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed
+```
+
+#### 3. Implement Rate Limiting
+
+- Limit login attempts (e.g., 5 attempts per 15 minutes)
+- Use exponential backoff for repeated failures
+- Consider IP-based rate limiting to prevent distributed attacks
+
+#### 4. Enable Multi-Factor Authentication
+
+- Offer various MFA options (SMS, email, authenticator apps)
+- Require MFA for sensitive operations or high-privilege accounts
+- Educate users on the importance of MFA
+
+### Real-World Tip
+
+When implementing password policies, consider using a password strength meter on registration forms. This provides real-time feedback to users, encouraging stronger passwords without relying solely on rigid rules.
+
+Example JavaScript for a basic strength meter:
+
+```javascript
+function checkPasswordStrength(password) {
+    let strength = 0;
+    if (password.length >= 12) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+}
+```
+
+By implementing these mitigation strategies, organizations can significantly reduce the risk of successful password cracking attempts and enhance overall security posture.
+
+---
+

@@ -310,3 +310,121 @@ if __name__ == "__main__":
         print("-" * 50)
 ```
 
+```python
+import hashlib
+import string
+import random
+import time
+
+def password_strength_checker(password):
+    """
+    Check the strength of a given password and provide feedback.
+    
+    Args:
+    password (str): The password to check
+    
+    Returns:
+    tuple: (score, feedback)
+    
+    This function is useful for both defensive purposes (helping users create strong passwords)
+    and for understanding common password weaknesses during penetration testing.
+    """
+    score = 0
+    feedback = []
+    
+    # Check length
+    if len(password) < 8:
+        feedback.append("Password is too short. Aim for at least 8 characters.")
+    elif len(password) >= 12:
+        score += 2
+        feedback.append("Good length!")
+    else:
+        score += 1
+    
+    # Check for uppercase
+    if any(c.isupper() for c in password):
+        score += 1
+    else:
+        feedback.append("Add uppercase letters for complexity.")
+    
+    # Check for lowercase
+    if any(c.islower() for c in password):
+        score += 1
+    else:
+        feedback.append("Add lowercase letters for complexity.")
+    
+    # Check for digits
+    if any(c.isdigit() for c in password):
+        score += 1
+    else:
+        feedback.append("Add numbers for complexity.")
+    
+    # Check for special characters
+    if any(c in string.punctuation for c in password):
+        score += 1
+    else:
+        feedback.append("Add special characters for complexity.")
+    
+    # Simulate basic dictionary attack
+    common_passwords = ['password', '123456', 'qwerty', 'admin']
+    if password.lower() in common_passwords:
+        score = 0
+        feedback.append("This is a very common password. Highly insecure!")
+    
+    # Provide overall assessment
+    if score < 3:
+        feedback.insert(0, "Weak password. Please improve.")
+    elif score < 5:
+        feedback.insert(0, "Moderate password. Could be stronger.")
+    else:
+        feedback.insert(0, "Strong password!")
+    
+    return (score, feedback)
+
+def simulate_brute_force(password, max_attempts=1000000):
+    """
+    Simulate a simple brute force attack to demonstrate the importance of password complexity.
+    
+    Args:
+    password (str): The password to crack
+    max_attempts (int): Maximum number of attempts before giving up
+    
+    Returns:
+    tuple: (success, attempts, time_taken)
+    
+    This simulation helps in understanding the relationship between password complexity
+    and the time required to crack it, emphasizing the importance of strong passwords.
+    """
+    charset = string.ascii_letters + string.digits + string.punctuation
+    attempts = 0
+    start_time = time.time()
+    
+    while attempts < max_attempts:
+        guess = ''.join(random.choice(charset) for _ in range(len(password)))
+        attempts += 1
+        
+        if guess == password:
+            end_time = time.time()
+            return (True, attempts, end_time - start_time)
+    
+    end_time = time.time()
+    return (False, attempts, end_time - start_time)
+
+# Example usage
+if __name__ == "__main__":
+    test_password = "P@ssw0rd123"
+    
+    # Check password strength
+    strength_score, feedback = password_strength_checker(test_password)
+    print(f"Password strength score: {strength_score}/6")
+    for item in feedback:
+        print(f"- {item}")
+    
+    # Simulate brute force attack
+    success, attempts, time_taken = simulate_brute_force(test_password)
+    if success:
+        print(f"\nPassword cracked in {attempts} attempts and {time_taken:.2f} seconds")
+    else:
+        print(f"\nFailed to crack password after {attempts} attempts and {time_taken:.2f} seconds")
+```
+

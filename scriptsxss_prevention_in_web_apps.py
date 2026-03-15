@@ -301,3 +301,100 @@ if __name__ == "__main__":
         print()
 ```
 
+```python
+import html
+import re
+
+def xss_sanitize(input_string):
+    """
+    Sanitizes input to help prevent XSS attacks in web applications.
+    
+    Args:
+    input_string (str): The user input to be sanitized
+    
+    Returns:
+    str: Sanitized string safe for rendering in HTML
+    
+    Usage:
+    sanitized = xss_sanitize(user_input)
+    
+    This function is useful in pentesting/defense to:
+    1. Demonstrate proper input sanitization
+    2. Test if a web app is vulnerable to XSS
+    3. Implement a basic XSS prevention measure
+    """
+    
+    # Step 1: HTML Escape
+    escaped = html.escape(input_string)
+    
+    # Step 2: Remove potential JavaScript events
+    escaped = re.sub(r'on\w+', '', escaped)
+    
+    # Step 3: Remove potential JavaScript functions
+    escaped = re.sub(r'javascript:', '', escaped, flags=re.IGNORECASE)
+    
+    # Step 4: Remove potential DOM manipulation
+    escaped = re.sub(r'document\.', '', escaped, flags=re.IGNORECASE)
+    
+    return escaped
+
+def xss_vulnerability_check(input_string):
+    """
+    Checks if a string might be vulnerable to XSS attacks.
+    
+    Args:
+    input_string (str): The string to check for potential XSS vulnerabilities
+    
+    Returns:
+    bool: True if potentially vulnerable, False otherwise
+    
+    Usage:
+    is_vulnerable = xss_vulnerability_check(user_input)
+    
+    This function is useful in pentesting/defense to:
+    1. Quickly assess if user input might contain XSS payloads
+    2. Test web app input fields for potential vulnerabilities
+    3. Demonstrate common XSS attack patterns
+    """
+    
+    # List of common XSS attack patterns
+    xss_patterns = [
+        r'<script.*?>',
+        r'javascript:',
+        r'onerror=',
+        r'onload=',
+        r'onclick=',
+        r'alert\(',
+        r'document\.cookie',
+        r'document\.write',
+        r'<img.*?src=',
+        r'<iframe.*?src='
+    ]
+    
+    # Check if any pattern matches the input string
+    for pattern in xss_patterns:
+        if re.search(pattern, input_string, re.IGNORECASE):
+            return True
+    
+    return False
+
+# Example usage
+if __name__ == "__main__":
+    test_inputs = [
+        "Hello, World!",
+        "<script>alert('XSS')</script>",
+        "onclick=alert('XSS')",
+        "<img src='x' onerror='alert(\"XSS\")'>",
+        "JavaScript:alert('XSS')",
+        "document.cookie",
+        "<iframe src='javascript:alert(`XSS`)'></iframe>"
+    ]
+    
+    print("XSS Vulnerability Check:")
+    for input_str in test_inputs:
+        print(f"Input: {input_str}")
+        print(f"Vulnerable: {xss_vulnerability_check(input_str)}")
+        print(f"Sanitized: {xss_sanitize(input_str)}")
+        print()
+```
+

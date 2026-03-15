@@ -378,3 +378,97 @@ def hash_file_checker(file_path, expected_hash, hash_type='sha256'):
 # result, actual_hash = hash_file_checker('example.txt', '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824')
 ```
 
+```python
+import hashlib
+import os
+import time
+
+def hash_file(file_path, algorithms=['md5', 'sha1', 'sha256']):
+    """
+    Calculate cryptographic hashes for a given file.
+    
+    Args:
+    file_path (str): Path to the file to be hashed
+    algorithms (list): List of hash algorithms to use (default: md5, sha1, sha256)
+    
+    Returns:
+    dict: A dictionary with algorithm names as keys and corresponding hash values
+    
+    This function is useful in cybersecurity for:
+    - File integrity checking
+    - Malware identification (comparing hashes with known malware databases)
+    - Digital forensics (creating file fingerprints)
+    """
+    
+    hash_dict = {}
+    
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    for algorithm in algorithms:
+        if algorithm not in hashlib.algorithms_available:
+            raise ValueError(f"Unsupported hash algorithm: {algorithm}")
+        
+        hash_obj = hashlib.new(algorithm)
+        
+        with open(file_path, 'rb') as file:
+            for chunk in iter(lambda: file.read(4096), b''):
+                hash_obj.update(chunk)
+        
+        hash_dict[algorithm] = hash_obj.hexdigest()
+    
+    return hash_dict
+
+def benchmark_hash_speed(data_size=1024*1024, algorithms=['md5', 'sha1', 'sha256', 'sha512']):
+    """
+    Benchmark the speed of different hash algorithms.
+    
+    Args:
+    data_size (int): Size of random data to hash, in bytes (default: 1 MB)
+    algorithms (list): List of hash algorithms to benchmark
+    
+    Returns:
+    dict: A dictionary with algorithm names as keys and speed in MB/s as values
+    
+    This function is useful in cybersecurity for:
+    - Selecting appropriate hash algorithms based on performance requirements
+    - Understanding the trade-offs between security and speed for different algorithms
+    """
+    
+    speed_dict = {}
+    data = os.urandom(data_size)
+    
+    for algorithm in algorithms:
+        if algorithm not in hashlib.algorithms_available:
+            raise ValueError(f"Unsupported hash algorithm: {algorithm}")
+        
+        hash_obj = hashlib.new(algorithm)
+        
+        start_time = time.time()
+        hash_obj.update(data)
+        hash_obj.hexdigest()
+        end_time = time.time()
+        
+        speed = data_size / (end_time - start_time) / (1024 * 1024)  # MB/s
+        speed_dict[algorithm] = round(speed, 2)
+    
+    return speed_dict
+
+# Example usage:
+if __name__ == "__main__":
+    # File hashing example
+    try:
+        file_hashes = hash_file("example.txt")
+        print("File Hashes:")
+        for algo, hash_value in file_hashes.items():
+            print(f"{algo}: {hash_value}")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    
+    # Hash speed benchmark example
+    print("\nHash Speed Benchmark:")
+    speeds = benchmark_hash_speed()
+    for algo, speed in speeds.items():
+        print(f"{algo}: {speed} MB/s")
+```
+

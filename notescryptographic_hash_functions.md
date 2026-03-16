@@ -160,3 +160,48 @@ By understanding and correctly implementing cryptographic hash functions, cybers
 
 ---
 
+## Cryptographic Hash Functions
+
+Cryptographic hash functions are fundamental tools in information security, serving as the backbone for various cryptographic applications. These functions take an input (or 'message') of any length and produce a fixed-size output, typically called a 'hash' or 'digest'.
+
+### Key Characteristics:
+
+- **One-way function**: It should be computationally infeasible to reverse the hash to obtain the original input.
+- **Deterministic**: The same input always produces the same hash.
+- **Fast computation**: Generating the hash should be quick for any given input.
+- **Avalanche effect**: A small change in the input should result in a significantly different hash.
+- **Collision resistance**: It should be extremely difficult to find two different inputs that produce the same hash.
+
+### Common Hash Functions:
+
+- MD5 (128-bit) - *Note: No longer considered cryptographically secure*
+- SHA-1 (160-bit) - *Note: Weaknesses have been found; avoid for new applications*
+- SHA-2 family (SHA-256, SHA-512)
+- SHA-3 family
+
+### Best Practices:
+
+1. Use cryptographically secure hash functions (e.g., SHA-256 or better).
+2. Regularly update hash functions as new vulnerabilities are discovered.
+3. For password storage, use specialized password hashing functions like bcrypt, scrypt, or Argon2.
+4. Implement salt when hashing passwords to prevent rainbow table attacks.
+
+### Real-world Example:
+
+Digital signatures often use hash functions. Instead of signing an entire document, which would be computationally expensive, the document is first hashed, and then the hash is signed.
+
+```python
+import hashlib
+
+document = "This is a confidential message."
+hash_object = hashlib.sha256(document.encode())
+document_hash = hash_object.hexdigest()
+
+print(f"Document hash: {document_hash}")
+# Output: Document hash: a7630e8b56a0d6018a0f72d3f6c363b3dcb74961343d27e88e66e75fd9c51a65
+```
+
+In this example, SHA-256 is used to create a unique fingerprint of the document. This hash can then be signed with the sender's private key to create a digital signature, ensuring both integrity and authenticity of the document.
+
+---
+

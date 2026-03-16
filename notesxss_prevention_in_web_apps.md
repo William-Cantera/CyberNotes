@@ -350,3 +350,56 @@ By following these practices and maintaining vigilance, developers can significa
 
 ---
 
+## XSS Prevention in Web Apps
+
+Cross-Site Scripting (XSS) is a critical security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. Preventing XSS is crucial for maintaining the security and integrity of web applications.
+
+### Key Concepts
+
+- **Types of XSS:**
+  1. Reflected XSS
+  2. Stored XSS
+  3. DOM-based XSS
+
+- **Attack Vector:** User input that is not properly sanitized or encoded before being rendered in a web page.
+
+### Best Practices for XSS Prevention
+
+1. **Input Validation:** Validate and sanitize all user inputs on the server-side.
+
+2. **Output Encoding:** Encode user-supplied data before rendering it in HTML, JavaScript, CSS, or URLs.
+
+3. **Content Security Policy (CSP):** Implement CSP headers to restrict the sources of content that can be loaded.
+
+4. **HTTP-only Cookies:** Use HTTP-only flag for sensitive cookies to prevent access via client-side scripts.
+
+5. **Use Modern Frameworks:** Leverage frameworks that have built-in XSS protections (e.g., React, Angular).
+
+### Example: Preventing XSS in PHP
+
+```php
+// Bad (vulnerable) code
+echo "Welcome, " . $_GET['name'] . "!";
+
+// Good (safe) code
+echo "Welcome, " . htmlspecialchars($_GET['name'], ENT_QUOTES, 'UTF-8') . "!";
+```
+
+### Real-world Tip
+
+When working with APIs that return JSON, ensure that the `Content-Type` header is set to `application/json`. This prevents browsers from interpreting the response as HTML, which could lead to XSS vulnerabilities.
+
+```http
+Content-Type: application/json; charset=utf-8
+```
+
+### Additional Considerations
+
+- Regularly update all dependencies and libraries to patch known vulnerabilities.
+- Conduct security audits and penetration testing to identify potential XSS weaknesses.
+- Educate developers about XSS risks and secure coding practices.
+
+By implementing these preventive measures and staying vigilant, developers can significantly reduce the risk of XSS attacks in their web applications.
+
+---
+

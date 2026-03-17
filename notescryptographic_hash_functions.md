@@ -205,3 +205,52 @@ In this example, SHA-256 is used to create a unique fingerprint of the document.
 
 ---
 
+## Cryptographic Hash Functions
+
+Cryptographic hash functions are fundamental tools in information security, serving as the backbone for various cryptographic applications. These functions take an input (or 'message') of any length and produce a fixed-size output, typically called a 'hash' or 'digest'.
+
+### Key Characteristics:
+
+- **One-way function**: It's computationally infeasible to reverse the hash to obtain the original input.
+- **Deterministic**: The same input always produces the same hash.
+- **Fixed output size**: Regardless of input size, the output length is constant.
+- **Avalanche effect**: A small change in input results in a significantly different hash.
+- **Collision resistance**: It's extremely difficult to find two different inputs that produce the same hash.
+
+### Common Hash Functions:
+
+- MD5 (deprecated due to vulnerabilities)
+- SHA-1 (also considered weak)
+- SHA-256, SHA-384, SHA-512 (part of the SHA-2 family)
+- SHA-3 (newest standard)
+
+### Best Practices:
+
+1. Always use cryptographically secure hash functions (e.g., SHA-256 or higher).
+2. Keep hash functions updated as older ones become vulnerable.
+3. Use salting when hashing passwords to prevent rainbow table attacks.
+4. Implement key stretching techniques like PBKDF2 for password hashing.
+
+### Real-world Example:
+
+Password storage is a common application of cryptographic hash functions. Instead of storing plaintext passwords, systems store their hashes:
+
+```python
+import hashlib
+
+def hash_password(password):
+    # Using SHA-256
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# Store this hash instead of the actual password
+stored_hash = hash_password("mySecurePassword123")
+```
+
+When a user attempts to log in, their input is hashed and compared to the stored hash.
+
+### Security Tip:
+
+Never try to implement your own cryptographic hash function. Always use well-established, thoroughly tested libraries and functions provided by reputable sources. Cryptography is complex, and even small mistakes can lead to significant vulnerabilities.
+
+---
+

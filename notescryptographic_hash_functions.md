@@ -254,3 +254,68 @@ Never try to implement your own cryptographic hash function. Always use well-est
 
 ---
 
+## Cryptographic Hash Functions
+
+Cryptographic hash functions are fundamental tools in cybersecurity, providing data integrity and authentication. These functions take an input (message) of any length and produce a fixed-size output called a hash or digest.
+
+### Key Characteristics
+
+- **Deterministic**: The same input always produces the same output
+- **Quick computation**: Efficient to calculate for any given input
+- **Preimage resistance**: Infeasible to determine the input from its hash
+- **Second preimage resistance**: Difficult to find another input with the same hash
+- **Collision resistance**: Extremely unlikely to find two different inputs with the same hash
+
+### Common Hash Functions
+
+- MD5 (deprecated due to vulnerabilities)
+- SHA-1 (deprecated for most uses)
+- SHA-256, SHA-384, SHA-512 (part of the SHA-2 family)
+- SHA-3 (newest standard, based on the Keccak algorithm)
+
+### Use Cases
+
+1. Password storage
+2. Digital signatures
+3. File integrity checks
+4. Blockchain technology
+
+### Best Practices
+
+- Always use cryptographically secure hash functions (e.g., SHA-256 or better)
+- Salt passwords before hashing to prevent rainbow table attacks
+- Keep hash functions up-to-date as older ones become vulnerable
+
+### Example: File Integrity Check
+
+To verify a file's integrity using a hash function:
+
+1. Generate the hash of the original file:
+
+```bash
+sha256sum original_file.zip > original_hash.txt
+```
+
+2. Transfer the file and hash separately
+3. On the receiving end, generate a new hash:
+
+```bash
+sha256sum received_file.zip > received_hash.txt
+```
+
+4. Compare the two hashes:
+
+```bash
+diff original_hash.txt received_hash.txt
+```
+
+If there's no output, the files are identical, confirming integrity.
+
+### Tip
+
+When storing passwords, combine a strong hash function with key stretching techniques like PBKDF2 or bcrypt to increase resistance against brute-force attacks.
+
+Remember, while cryptographic hash functions are powerful tools, they must be used correctly to ensure security. Stay informed about current best practices and emerging vulnerabilities in hash functions.
+
+---
+

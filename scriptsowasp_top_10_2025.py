@@ -95,3 +95,76 @@ def sanitize_input(input_string: str) -> str:
     
     return input_
 
+```python
+import re
+import urllib.parse
+import http.client
+from typing import List, Tuple
+
+def xss_scanner(url: str, params: List[Tuple[str, str]]) -> List[str]:
+    """
+    Scans a URL with given parameters for potential XSS vulnerabilities.
+    
+    Args:
+    url (str): The base URL to test
+    params (List[Tuple[str, str]]): List of (param_name, param_value) tuples
+    
+    Returns:
+    List[str]: List of potentially vulnerable parameters
+    
+    Usage:
+    url = "http://example.com/search"
+    params = [("q", "test"), ("sort", "asc")]
+    vulnerabilities = xss_scanner(url, params)
+    
+    This function is useful for identifying potential XSS vulnerabilities
+    in web applications. It's a basic implementation and should be used
+    for educational purposes or as a starting point for more comprehensive tools.
+    """
+    
+    vulnerable_params = []
+    xss_payloads = [
+        "<script>alert('XSS')</script>",
+        "javascript:alert('XSS')",
+        "<img src=x onerror=alert('XSS')>",
+        "<svg onload=alert('XSS')>",
+        "'-alert('XSS')-'"
+    ]
+    
+    for param_name, param_value in params:
+        for payload in xss_payloads:
+            test_url = f"{url}?{param_name}={urllib.parse.quote(payload)}"
+            
+            try:
+                conn = http.client.HTTPConnection(urllib.parse.urlparse(url).netloc)
+                conn.request("GET", urllib.parse.urlparse(test_url).path + "?" + urllib.parse.urlparse(test_url).query)
+                response = conn.getresponse()
+                body = response.read().decode('utf-8')
+                
+                if payload in body and not re.search(r'&lt;|&gt;|&quot;|&#39;', body):
+                    vulnerable_params.append(param_name)
+                    break
+                    
+            except Exception as e:
+                print(f"Error testing {param_name}: {str(e)}")
+            finally:
+                conn.close()
+    
+    return list(set(vulnerable_params))
+
+# Example usage:
+if __name__ == "__main__":
+    test_url = "http://example.com/search"
+    test_params = [("q", "test"), ("sort", "asc")]
+    results = xss_scanner(test_url, test_params)
+    
+    if results:
+        print("Potentially vulnerable parameters:", ", ".join(results))
+    else:
+        print("No obvious XSS vulnerabilities detected.")
+
+# Note: This is a basic implementation for educational purposes.
+# Real-world XSS testing requires more comprehensive approaches,
+# consent from the website owner, and careful ethical considerations.
+```
+

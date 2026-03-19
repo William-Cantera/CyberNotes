@@ -107,3 +107,88 @@ def test_zero_trust_endpoint(url):
                 # Send HTTP request and check headers
                 secure_sock.send(f"GET / HTTP/1.1\r\nHost: {hostname}\r\n\r\n".encode())
 
+```python
+import socket
+import ssl
+from urllib.parse import urlparse
+
+def zero_trust_tls_checker(url):
+    """
+    Check if a given URL supports modern TLS protocols and cipher suites.
+    This aligns with Zero Trust principles by verifying encryption standards.
+
+    Args:
+    url (str): The URL to check (e.g., "https://example.com")
+
+    Returns:
+    dict: Results of TLS checks
+
+    Usage:
+    result = zero_trust_tls_checker("https://example.com")
+    print(result)
+
+    Why it's useful:
+    - Helps verify proper encryption in a Zero Trust environment
+    - Identifies outdated or insecure TLS configurations
+    - Supports continuous validation of security posture
+    """
+
+    parsed_url = urlparse(url)
+    hostname = parsed_url.hostname
+    port = parsed_url.port or 443
+
+    results = {
+        "url": url,
+        "supports_tls_1_2": False,
+        "supports_tls_1_3": False,
+        "strong_ciphers": [],
+        "weak_ciphers": []
+    }
+
+    # List of strong and weak cipher suites
+    strong_ciphers = [
+        'TLS_AES_256_GCM_SHA384',
+        'TLS_CHACHA20_POLY1305_SHA256',
+        'TLS_AES_128_GCM_SHA256',
+    ]
+    weak_ciphers = [
+        'TLS_RSA_WITH_3DES_EDE_CBC_SHA',
+        'TLS_RSA_WITH_RC4_128_SHA',
+    ]
+
+    context = ssl.create_default_context()
+    
+    # Check TLS 1.2
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    try:
+        with socket.create_connection((hostname, port)) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as secure_sock:
+                results["supports_tls_1_2"] = True
+    except ssl.SSLError:
+        pass
+
+    # Check TLS 1.3
+    context.minimum_version = ssl.TLSVersion.TLSv1_3
+    try:
+        with socket.create_connection((hostname, port)) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as secure_sock:
+                results["supports_tls_1_3"] = True
+    except ssl.SSLError:
+        pass
+
+    # Check cipher suites
+    context.set_ciphers(':'.join(strong_ciphers + weak_ciphers))
+    try:
+        with socket.create_connection((hostname, port)) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as secure_sock:
+                cipher = secure_sock.cipher()
+                if cipher[0] in strong_ciphers:
+                    results["strong_ciphers"].append(cipher[0])
+                elif cipher[0] in weak_ciphers:
+                    results["weak_ciphers"].append(cipher[0])
+    except ssl.SSLError:
+        pass
+
+    return results
+```
+

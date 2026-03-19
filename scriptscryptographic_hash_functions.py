@@ -472,3 +472,64 @@ if __name__ == "__main__":
         print(f"{algo}: {speed} MB/s")
 ```
 
+```python
+import hashlib
+import time
+
+def hash_strength_checker(password):
+    """
+    Check the strength of different hash algorithms for a given password.
+    
+    This function demonstrates the time and output differences between
+    various cryptographic hash functions. It's useful in cybersecurity
+    to understand the trade-offs between speed and security for different
+    hashing algorithms.
+    
+    Args:
+    password (str): The password to hash and test.
+    
+    Returns:
+    None. Prints results to console.
+    
+    Usage:
+    hash_strength_checker("mypassword123")
+    """
+    
+    algorithms = ['md5', 'sha1', 'sha256', 'sha3_256', 'blake2s', 'blake2b']
+    
+    print(f"Testing hash strength for password: {password}")
+    print("-" * 50)
+    
+    for algo in algorithms:
+        start_time = time.time()
+        
+        # Create a new hash object
+        hasher = hashlib.new(algo)
+        
+        # Update the hash object with the password bytes
+        hasher.update(password.encode('utf-8'))
+        
+        # Get the hexadecimal representation of the hash
+        hashed = hasher.hexdigest()
+        
+        end_time = time.time()
+        
+        print(f"Algorithm: {algo}")
+        print(f"Hash: {hashed}")
+        print(f"Length: {len(hashed)} characters")
+        print(f"Time taken: {(end_time - start_time):.6f} seconds")
+        print("-" * 50)
+
+    print("Note: Slower hashing algorithms and longer hash lengths generally")
+    print("provide better security against brute-force and rainbow table attacks.")
+    print("However, they also require more computational resources.")
+    print("\nIn pentesting, understanding these differences helps in:")
+    print("1. Identifying weak hashing algorithms in target systems")
+    print("2. Estimating time required for potential brute-force attacks")
+    print("3. Recommending stronger hashing algorithms for better security")
+
+# Example usage
+if __name__ == "__main__":
+    hash_strength_checker("MySecurePassword123!")
+```
+

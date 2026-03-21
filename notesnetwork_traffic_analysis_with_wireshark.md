@@ -238,3 +238,55 @@ Wireshark is an essential tool for network analysis, offering deep insights into
 
 ---
 
+## Network Traffic Analysis with Wireshark
+
+### Introduction
+Wireshark is a powerful, open-source network protocol analyzer used for network troubleshooting, analysis, and software/protocol development. It allows cybersecurity professionals to capture and interactively browse network traffic in real-time.
+
+### Key Concepts
+
+1. **Packet Capture**: Wireshark can capture live network traffic or read from saved capture files.
+2. **Protocol Dissection**: Automatically recognizes and interprets numerous protocols.
+3. **Filtering**: Allows users to filter packets based on various criteria.
+4. **Colorization**: Uses color-coding to highlight different types of traffic for easier analysis.
+
+### Best Practices
+
+- Always capture traffic on a dedicated interface to avoid interference.
+- Use capture filters to reduce the amount of data collected when targeting specific traffic.
+- Regularly update Wireshark to ensure support for the latest protocols and security fixes.
+- Be mindful of privacy concerns when capturing traffic in shared environments.
+
+### Basic Wireshark Workflow
+
+1. Select network interface
+2. Start capture
+3. Stop capture after desired duration or packet count
+4. Apply display filters to focus on relevant traffic
+5. Analyze packets and protocol information
+
+### Useful Display Filters
+
+```
+ip.addr == 192.168.1.100  # Traffic to/from a specific IP
+http                      # Show only HTTP traffic
+tcp.port == 443           # HTTPS traffic
+```
+
+### Real-World Example: Identifying Malware Communication
+
+Suppose you suspect a machine on your network is infected with malware. You could:
+
+1. Start a Wireshark capture on the suspected machine's network interface.
+2. Look for unusual outbound connections, especially to unfamiliar IP addresses.
+3. Use the following display filter to focus on DNS queries, which might reveal C2 communication:
+   ```
+   dns.qry.name contains "suspiciousdomain"
+   ```
+4. Analyze the captured traffic for patterns or encoded data in packet payloads.
+
+### Tip
+When analyzing HTTPS traffic, you may need to configure Wireshark with the appropriate SSL/TLS keys to decrypt the traffic. This is often necessary in controlled environments for thorough analysis of encrypted communications.
+
+---
+

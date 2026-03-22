@@ -533,3 +533,92 @@ if __name__ == "__main__":
     hash_strength_checker("MySecurePassword123!")
 ```
 
+```python
+import hashlib
+import os
+import time
+
+def hash_file(file_path, algorithms=None):
+    """
+    Calculate cryptographic hashes of a file using specified algorithms.
+    
+    Args:
+    file_path (str): Path to the file to be hashed
+    algorithms (list): List of hash algorithms to use. If None, uses default set.
+    
+    Returns:
+    dict: A dictionary with algorithm names as keys and hex digests as values
+    
+    This function is useful in cybersecurity for:
+    - Verifying file integrity
+    - Detecting file modifications
+    - Creating unique file identifiers
+    - Comparing files without revealing their contents
+    """
+    
+    if algorithms is None:
+        algorithms = ['md5', 'sha1', 'sha256', 'sha512']
+    
+    results = {}
+    
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    for algo in algorithms:
+        if algo not in hashlib.algorithms_available:
+            print(f"Warning: {algo} is not available. Skipping.")
+            continue
+        
+        hash_obj = hashlib.new(algo)
+        
+        start_time = time.time()
+        
+        with open(file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b''):
+                hash_obj.update(chunk)
+        
+        end_time = time.time()
+        
+        results[algo] = {
+            'digest': hash_obj.hexdigest(),
+            'time': end_time - start_time
+        }
+    
+    return results
+
+def print_results(results):
+    """
+    Print the hash results in a formatted manner.
+    """
+    print("\nHash Results:")
+    print("-" * 50)
+    for algo, data in results.items():
+        print(f"{algo.upper()}:")
+        print(f"  Digest: {data['digest']}")
+        print(f"  Time: {data['time']:.4f} seconds")
+        print("-" * 50)
+
+if __name__ == "__main__":
+    file_path = input("Enter the path of the file to hash: ")
+    try:
+        results = hash_file(file_path)
+        print_results(results)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+# Usage example:
+# python hash_file.py
+# Then enter the path to the file when prompted
+#
+# This script demonstrates the use of cryptographic hash functions,
+# which are essential in cybersecurity for ensuring data integrity,
+# creating digital signatures, and securely storing passwords.
+# It can be used to:
+# 1. Verify downloaded files haven't been tampered with
+# 2. Create checksums for malware samples
+# 3. Benchmark different hash algorithms
+# 4. Understand how file hashing works in practice
+```
+

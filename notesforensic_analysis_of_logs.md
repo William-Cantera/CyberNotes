@@ -374,3 +374,53 @@ By mastering forensic log analysis, cybersecurity professionals can effectively 
 
 ---
 
+## Forensic Analysis of Logs
+
+### Key Concepts
+
+- Log forensics: The process of examining log files to investigate security incidents, system failures, or suspicious activities.
+- Log sources: Various systems and applications generate logs, including operating systems, firewalls, intrusion detection systems (IDS), and applications.
+- Timeline analysis: Reconstructing the sequence of events using timestamp information from multiple log sources.
+- Log integrity: Ensuring logs haven't been tampered with during or after the incident.
+
+### Best Practices
+
+1. Centralize log collection: Use a centralized log management system to aggregate logs from multiple sources.
+2. Establish baseline: Understand normal system behavior to identify anomalies more easily.
+3. Maintain log retention: Keep logs for an appropriate duration as per compliance requirements and investigation needs.
+4. Use automated tools: Employ log analysis tools to process large volumes of data efficiently.
+5. Correlate events: Look for connections between seemingly unrelated events across different log sources.
+
+### Log Analysis Process
+
+1. Identify relevant log sources
+2. Collect and preserve logs
+3. Parse and normalize log data
+4. Filter and search for specific events or patterns
+5. Analyze and correlate findings
+6. Document and report results
+
+### Example: Investigating a Brute Force Attack
+
+Suppose a server experiences a brute force attack. Here's how log analysis might proceed:
+
+1. Collect relevant logs (e.g., authentication logs, firewall logs)
+2. Look for patterns of failed login attempts:
+
+```
+grep "Failed password" /var/log/auth.log | head -n 5
+Feb 15 08:23:01 server sshd[1234]: Failed password for invalid user admin from 192.168.1.100 port 54321 ssh2
+Feb 15 08:23:03 server sshd[1235]: Failed password for invalid user root from 192.168.1.100 port 54322 ssh2
+Feb 15 08:23:05 server sshd[1236]: Failed password for invalid user test from 192.168.1.100 port 54323 ssh2
+```
+
+3. Analyze the frequency and origin of attempts
+4. Correlate with other logs (e.g., IDS alerts, firewall blocks)
+5. Determine the attack's duration, scope, and potential impact
+
+### Tip
+
+When analyzing logs, always consider the possibility of log tampering or deletion. Compare logs from multiple sources and look for gaps in timestamps or sudden changes in logging patterns that might indicate manipulation.
+
+---
+

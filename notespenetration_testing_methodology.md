@@ -173,3 +173,62 @@ Remember, ethical considerations and legal compliance are crucial in penetration
 
 ---
 
+## Penetration Testing Methodology
+
+Penetration testing, often called "pen testing," is a systematic process of evaluating the security of a computer system or network by simulating an attack. A well-structured methodology ensures thorough and consistent testing.
+
+### Key Phases
+
+1. **Planning and Reconnaissance**
+   - Define scope and objectives
+   - Gather information about the target
+   - Identify potential entry points
+
+2. **Scanning**
+   - Perform network scans to identify active systems
+   - Use vulnerability scanners to detect potential weaknesses
+
+3. **Gaining Access**
+   - Exploit vulnerabilities to gain initial access
+   - Escalate privileges if possible
+
+4. **Maintaining Access**
+   - Establish persistence mechanisms
+   - Explore the compromised system further
+
+5. **Analysis and Reporting**
+   - Document findings and vulnerabilities
+   - Provide recommendations for remediation
+
+### Best Practices
+
+- Always obtain proper authorization before testing
+- Use a combination of automated tools and manual techniques
+- Document every step of the process
+- Prioritize vulnerabilities based on risk and impact
+- Follow ethical guidelines and respect data privacy
+
+### Real-world Example
+
+Consider a web application pen test:
+
+1. Reconnaissance: Identify the target's IP range, domain names, and technologies used.
+2. Scanning: Use Nmap to scan for open ports and services.
+   ```
+   nmap -sV -p- target.com
+   ```
+3. Gaining Access: Exploit a SQL injection vulnerability in the login form.
+   ```sql
+   ' OR 1=1--
+   ```
+4. Maintaining Access: Upload a web shell for persistent access.
+5. Analysis: Document the vulnerabilities and provide remediation steps.
+
+### Tip
+
+Always use a controlled, isolated environment when practicing penetration testing techniques. Never attempt to breach systems without explicit permission, as this could be illegal and unethical.
+
+By following a structured methodology, penetration testers can systematically identify and report security weaknesses, helping organizations improve their overall security posture.
+
+---
+

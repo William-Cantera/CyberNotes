@@ -338,3 +338,107 @@ def extract_links(url):
 
 # Example usage
 
+```python
+import re
+import urllib.parse
+from urllib.request import urlopen
+from html.parser import HTMLParser
+
+class LinkExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            for attr in attrs:
+                if attr[0] == 'href':
+                    self.links.append(attr[1])
+
+def analyze_url_for_phishing(url):
+    """
+    Analyzes a given URL for potential phishing indicators.
+    
+    Args:
+    url (str): The URL to analyze
+    
+    Returns:
+    dict: A dictionary containing analysis results and risk score
+    
+    Usage:
+    result = analyze_url_for_phishing("http://example.com")
+    print(result)
+    
+    This function is useful in cybersecurity for:
+    1. Quickly assessing potential phishing URLs
+    2. Automated scanning of links in emails or messages
+    3. Training and awareness programs about phishing techniques
+    """
+    
+    result = {
+        "url": url,
+        "risk_score": 0,
+        "suspicious_elements": []
+    }
+    
+    # Check for HTTP instead of HTTPS
+    if url.startswith("http://"):
+        result["risk_score"] += 20
+        result["suspicious_elements"].append("Uses unsecure HTTP")
+    
+    # Check for IP address in URL
+    if re.search(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', url):
+        result["risk_score"] += 30
+        result["suspicious_elements"].append("IP address used instead of domain name")
+    
+    # Check for URL shorteners
+    shorteners = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co']
+    if any(shortener in url for shortener in shorteners):
+        result["risk_score"] += 25
+        result["suspicious_elements"].append("URL shortener detected")
+    
+    # Check for suspicious words in URL
+    suspicious_words = ['secure', 'account', 'banking', 'login', 'signin']
+    if any(word in url.lower() for word in suspicious_words):
+        result["risk_score"] += 15
+        result["suspicious_elements"].append("Suspicious words in URL")
+    
+    # Analyze the webpage content
+    try:
+        with urlopen(url) as response:
+            html_content = response.read().decode('utf-8')
+            
+            # Extract all links
+            link_extractor = LinkExtractor()
+            link_extractor.feed(html_content)
+            
+            # Check for mixed content (HTTP links on HTTPS page)
+            if url.startswith("https://") and any(link.startswith("http://") for link in link_extractor.links):
+                result["risk_score"] += 15
+                result["suspicious_elements"].append("Mixed content (HTTPS page with HTTP resources)")
+            
+            # Check for forms submitting to external domains
+            forms = re.findall(r'<form.*?action=["\'](.+?)["\']', html_content, re.IGNORECASE)
+            current_domain = urllib.parse.urlparse(url).netloc
+            for form_action in forms:
+                if urllib.parse.urlparse(form_action).netloc != current_domain:
+                    result["risk_score"] += 25
+                    result["suspicious_elements"].append("Form submitting to external domain")
+                    break
+    
+    except Exception as e:
+        result["suspicious_elements"].append(f"Error analyzing page content: {str(e)}")
+    
+    # Categorize risk
+    if result["risk_score"] >= 60:
+        result["risk_level"] = "High"
+    elif result["risk_score"] >= 30:
+        result["risk_level"] = "Medium"
+    else:
+        result["risk_level"] = "Low"
+    
+    return result
+
+# Example usage
+if __name__ == "__main__
+

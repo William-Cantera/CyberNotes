@@ -184,3 +184,78 @@ def ransomware_recovery_simulation(directory):
 # ransomware_recovery_simulation("/path/to/test/directory")
 ```
 
+```python
+import os
+import hashlib
+import datetime
+
+def ransomware_recovery_scanner(directory):
+    """
+    Scans a directory for potentially recoverable files after a ransomware attack.
+    
+    This function looks for files with known ransomware extensions and checks for
+    the existence of potential backup or shadow copy files.
+    
+    Args:
+    directory (str): The path to the directory to scan
+    
+    Returns:
+    dict: A summary of findings, including potentially affected and recoverable files
+    
+    Usage:
+    results = ransomware_recovery_scanner("/path/to/scan")
+    print(results)
+    
+    Note: This is for educational purposes only. In a real ransomware scenario,
+    professional help should be sought immediately.
+    """
+    
+    ransomware_extensions = ['.encrypted', '.locked', '.crypted', '.cry']
+    potential_backups = ['.bak', '~', '.old']
+    
+    affected_files = []
+    potential_recoveries = []
+    
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            full_path = os.path.join(root, file)
+            
+            # Check for ransomware-affected files
+            if any(file.endswith(ext) for ext in ransomware_extensions):
+                affected_files.append(full_path)
+                
+                # Look for potential backup files
+                file_name, file_ext = os.path.splitext(file)
+                for backup_ext in potential_backups:
+                    backup_file = os.path.join(root, file_name + backup_ext)
+                    if os.path.exists(backup_file):
+                        potential_recoveries.append((full_path, backup_file))
+                
+                # Check for Volume Shadow Copies (simulation for educational purposes)
+                vsc_file = os.path.join(root, f"ShadowCopy_{file}")
+                if os.path.exists(vsc_file):
+                    potential_recoveries.append((full_path, vsc_file))
+    
+    # Generate file hashes for potentially recoverable files
+    recovery_hashes = {}
+    for original, recovery in potential_recoveries:
+        with open(recovery, 'rb') as f:
+            file_hash = hashlib.md5(f.read()).hexdigest()
+            recovery_hashes[recovery] = file_hash
+    
+    return {
+        'scan_time': datetime.datetime.now().isoformat(),
+        'directory': directory,
+        'affected_files': affected_files,
+        'potential_recoveries': potential_recoveries,
+        'recovery_file_hashes': recovery_hashes,
+        'total_affected': len(affected_files),
+        'total_potential_recoveries': len(potential_recoveries)
+    }
+
+# Example usage (commented out for safety)
+# results = ransomware_recovery_scanner("/path/to/scan")
+# print(f"Found {results['total_affected']} affected files")
+# print(f"Identified {results['total_potential_recoveries']} potentially recoverable files")
+```
+

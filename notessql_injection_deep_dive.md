@@ -293,3 +293,62 @@ Remember, SQL Injection remains a prevalent threat. Regular security assessments
 
 ---
 
+## SQL Injection Deep Dive
+
+SQL Injection is a critical web application vulnerability that allows attackers to interfere with database queries, potentially leading to unauthorized data access or manipulation.
+
+### Key Concepts
+
+- **Definition**: SQL Injection occurs when user-supplied data is incorrectly filtered and inserted into SQL queries.
+- **Attack Vector**: Typically exploited through user input fields, URL parameters, or HTTP headers.
+- **Impact**: Can lead to data theft, data manipulation, and in some cases, remote code execution.
+
+### Types of SQL Injection
+
+1. **In-band SQLi**
+   - Classic: Attacker receives direct results from the vulnerable application.
+   - Error-based: Exploits error messages to gather information about the database structure.
+
+2. **Blind SQLi**
+   - Boolean-based: Uses true/false queries to infer information.
+   - Time-based: Relies on database response times to deduce information.
+
+3. **Out-of-band SQLi**
+   - Extracts data through alternative channels (e.g., DNS requests).
+
+### Prevention Best Practices
+
+- Use parameterized queries or prepared statements.
+- Implement input validation and sanitization.
+- Apply the principle of least privilege for database accounts.
+- Employ Web Application Firewalls (WAF) as an additional layer of protection.
+
+### Real-World Example
+
+Consider this vulnerable PHP code:
+
+```php
+$username = $_POST['username'];
+$query = "SELECT * FROM users WHERE username = '$username'";
+```
+
+An attacker could input: `' OR '1'='1` as the username, resulting in:
+
+```sql
+SELECT * FROM users WHERE username = '' OR '1'='1'
+```
+
+This would return all users, bypassing authentication.
+
+### Tip: SQL Injection Testing
+
+When testing for SQL Injection, try these common payloads:
+
+- `' OR '1'='1`
+- `'; DROP TABLE users; --`
+- `' UNION SELECT username, password FROM users --`
+
+Always obtain proper authorization before testing on live systems, and use dedicated vulnerable applications for practice.
+
+---
+

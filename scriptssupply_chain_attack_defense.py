@@ -542,3 +542,102 @@ if __name__ == "__main__":
         print("All files passed integrity check.")
 ```
 
+```python
+import hashlib
+import os
+import json
+import time
+
+def verify_package_integrity(package_dir, manifest_file):
+    """
+    Verifies the integrity of files in a software package against a manifest.
+    
+    This function helps defend against supply chain attacks by ensuring
+    that the files in a software package haven't been tampered with.
+    
+    Args:
+    package_dir (str): Path to the directory containing package files
+    manifest_file (str): Path to the manifest JSON file
+    
+    Returns:
+    tuple: (bool, list) - (integrity_check_passed, list_of_mismatched_files)
+    
+    Usage:
+    passed, mismatches = verify_package_integrity('./my_package', './manifest.json')
+    if passed:
+        print("Package integrity verified.")
+    else:
+        print(f"Integrity check failed. Mismatched files: {mismatches}")
+    
+    Note: This is a simplified example. In practice, you'd want to use
+    more sophisticated methods like digital signatures for verification.
+    """
+    
+    def calculate_file_hash(filepath):
+        """Calculate SHA256 hash of a file."""
+        sha256_hash = hashlib.sha256()
+        with open(filepath, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
+    
+    # Load the manifest
+    with open(manifest_file, 'r') as f:
+        manifest = json.load(f)
+    
+    mismatched_files = []
+    
+    # Verify each file in the manifest
+    for filename, expected_hash in manifest.items():
+        filepath = os.path.join(package_dir, filename)
+        
+        if not os.path.exists(filepath):
+            mismatched_files.append(f"{filename} (missing)")
+            continue
+        
+        actual_hash = calculate_file_hash(filepath)
+        
+        if actual_hash != expected_hash:
+            mismatched_files.append(filename)
+    
+    return len(mismatched_files) == 0, mismatched_files
+
+# Example usage and demonstration
+if __name__ == "__main__":
+    # Create a mock package and manifest for demonstration
+    os.makedirs("./mock_package", exist_ok=True)
+    
+    with open("./mock_package/file1.txt", "w") as f:
+        f.write("This is file 1")
+    with open("./mock_package/file2.txt", "w") as f:
+        f.write("This is file 2")
+    
+    manifest = {
+        "file1.txt": calculate_file_hash("./mock_package/file1.txt"),
+        "file2.txt": calculate_file_hash("./mock_package/file2.txt")
+    }
+    
+    with open("./manifest.json", "w") as f:
+        json.dump(manifest, f)
+    
+    # Verify the package
+    passed, mismatches = verify_package_integrity("./mock_package", "./manifest.json")
+    print(f"Initial check passed: {passed}")
+    
+    # Simulate a supply chain attack by modifying a file
+    time.sleep(1)  # Wait to ensure file modification time changes
+    with open("./mock_package/file1.txt", "a") as f:
+        f.write("\nThis file has been tampered with!")
+    
+    # Verify again
+    passed, mismatches = verify_package_integrity("./mock_package", "./manifest.json")
+    print(f"Check after tampering passed: {passed}")
+    print(f"Mismatched files: {mismatches}")
+    
+    # Clean up
+    os.remove("./mock_package/file1.txt")
+    os.remove("./mock_package/file2.txt")
+    os.rmdir("./mock_package")
+    os.remove("./manifest.json")
+```
+

@@ -452,3 +452,64 @@ By implementing these practices, web developers can significantly reduce the ris
 
 ---
 
+## XSS Prevention in Web Apps
+
+Cross-Site Scripting (XSS) is a critical security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. Preventing XSS is crucial for maintaining the security and integrity of web applications.
+
+### Key Concepts
+
+- **Types of XSS:**
+  1. Reflected XSS
+  2. Stored XSS
+  3. DOM-based XSS
+
+- **Attack Vector:** User input that is not properly sanitized or encoded
+
+- **Potential Impact:** 
+  - Theft of sensitive data (e.g., cookies, session tokens)
+  - Account hijacking
+  - Malware distribution
+  - Defacement of websites
+
+### Best Practices for XSS Prevention
+
+1. **Input Validation:**
+   - Validate all user inputs on the server-side
+   - Use whitelisting approach when possible
+
+2. **Output Encoding:**
+   - Encode all dynamic content before rendering it in the browser
+   - Use context-specific encoding (HTML, JavaScript, CSS, URL)
+
+3. **Content Security Policy (CSP):**
+   - Implement CSP headers to restrict sources of executable scripts
+
+4. **HttpOnly Flag:**
+   - Set the HttpOnly flag on cookies to prevent access via client-side scripts
+
+5. **X-XSS-Protection Header:**
+   - Enable browser's built-in XSS filter with `X-XSS-Protection: 1; mode=block`
+
+### Example: Output Encoding in JavaScript
+
+```javascript
+function displayUserInput(input) {
+  const encodedInput = encodeURIComponent(input);
+  document.getElementById('output').innerHTML = encodedInput;
+}
+```
+
+### Real-world Tip
+
+When working with frameworks or template engines, always use their built-in encoding functions. For example, in React:
+
+```jsx
+const UserInput = ({ data }) => (
+  <div>{data}</div>  // React automatically escapes this content
+);
+```
+
+Remember, XSS prevention is not a one-size-fits-all solution. It requires a multi-layered approach, combining secure coding practices, proper configuration, and ongoing security testing to effectively mitigate the risk of XSS attacks in web applications.
+
+---
+

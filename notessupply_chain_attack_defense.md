@@ -312,3 +312,44 @@ By maintaining an up-to-date SBOM, organizations can quickly identify and respon
 
 ---
 
+## Supply Chain Attack Defense
+
+Supply chain attacks target the less-secure elements in a product's supply chain, compromising systems through seemingly legitimate updates or components. Defending against these attacks requires a multi-faceted approach.
+
+### Key Concepts
+
+1. **Vendor Risk Management**: Assessing and monitoring the security posture of all third-party vendors and suppliers.
+2. **Software Composition Analysis (SCA)**: Identifying and tracking all third-party components and dependencies in your software.
+3. **Integrity Verification**: Ensuring the authenticity and integrity of received software and updates.
+4. **Least Privilege Principle**: Limiting access rights for applications, users, and processes to the minimum necessary.
+
+### Best Practices
+
+- Implement a robust vendor security assessment process
+- Regularly audit and update the inventory of all third-party software and components
+- Use code signing and verification for all software updates and patches
+- Employ network segmentation to isolate critical systems and limit the potential impact of a breach
+- Implement and maintain a comprehensive patch management program
+- Utilize automated tools for continuous monitoring of the software supply chain
+
+### Real-world Example: SolarWinds Attack
+
+The SolarWinds attack in 2020 demonstrated the severe impact of supply chain compromises. Attackers inserted malicious code into SolarWinds' Orion software updates, which were then distributed to thousands of customers.
+
+### Practical Tip: Software Bill of Materials (SBOM)
+
+Maintain an up-to-date SBOM for all software products. This inventory helps quickly identify and respond to vulnerabilities in third-party components. Here's a simple example of an SBOM entry:
+
+```json
+{
+  "name": "OpenSSL",
+  "version": "1.1.1k",
+  "supplier": "OpenSSL Software Foundation",
+  "uniqueIdentifier": "CVE-2021-3449"
+}
+```
+
+By implementing these defensive measures and staying vigilant, organizations can significantly reduce their exposure to supply chain attacks and mitigate potential damages.
+
+---
+

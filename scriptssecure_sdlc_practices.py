@@ -185,3 +185,74 @@ if __name__ == "__main__":
     print("\nRemember: This is a basic check and does not replace comprehensive security testing.")
 ```
 
+```python
+import re
+import sys
+
+def analyze_secure_sdlc_practices(code):
+    """
+    Analyzes Python code for basic secure SDLC practices.
+    
+    Usage: 
+    analyze_secure_sdlc_practices(code_string)
+    
+    This function checks for common security issues in code and can be used
+    as part of a secure code review process or developer education.
+    It's a basic example and should be expanded for real-world use.
+    """
+
+    issues = []
+
+    # Check for hardcoded secrets
+    secret_pattern = r'(password|secret|api_key)\s*=\s*[\'\"][^\'\"\s]+[\'\"]'
+    secrets = re.findall(secret_pattern, code, re.IGNORECASE)
+    if secrets:
+        issues.append(f"Potential hardcoded secrets found: {', '.join(secrets)}")
+
+    # Check for use of dangerous functions
+    dangerous_funcs = ['eval', 'exec', 'os.system', 'subprocess.call']
+    for func in dangerous_funcs:
+        if func in code:
+            issues.append(f"Use of potentially dangerous function: {func}")
+
+    # Check for SQL injection vulnerability
+    sql_injection_pattern = r'execute\([\'"]SELECT.*?\%s.*?[\'"]'
+    if re.search(sql_injection_pattern, code):
+        issues.append("Potential SQL injection vulnerability detected")
+
+    # Check for proper exception handling
+    if 'except:' in code and 'except Exception:' not in code:
+        issues.append("Broad exception handling detected. Consider catching specific exceptions.")
+
+    # Check for use of assert statements (can be disabled at runtime)
+    if 'assert' in code:
+        issues.append("Use of assert statements found. These can be disabled at runtime.")
+
+    # Check for use of print statements (might leak sensitive info in production)
+    if 'print(' in code:
+        issues.append("Use of print statements found. Ensure these are removed in production code.")
+
+    return issues
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <filename>")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+    try:
+        with open(filename, 'r') as file:
+            code = file.read()
+            issues = analyze_secure_sdlc_practices(code)
+            if issues:
+                print("Potential security issues found:")
+                for issue in issues:
+                    print(f"- {issue}")
+            else:
+                print("No obvious security issues detected. Remember, this is a basic check and doesn't guarantee security.")
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+    except IOError:
+        print(f"Error: Unable to read file '{filename}'.")
+```
+

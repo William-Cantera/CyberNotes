@@ -424,3 +424,71 @@ When analyzing logs, always consider the possibility of log tampering or deletio
 
 ---
 
+## Forensic Analysis of Logs
+
+Log analysis is a crucial aspect of digital forensics, providing valuable insights into system activities, security incidents, and user behaviors. Effective log analysis can reveal attack patterns, system vulnerabilities, and evidence of malicious activities.
+
+### Key Concepts
+
+1. **Log Types**:
+   - System logs
+   - Application logs
+   - Security logs
+   - Network logs
+
+2. **Log Sources**:
+   - Operating systems
+   - Firewalls
+   - Intrusion Detection Systems (IDS)
+   - Antivirus software
+   - Web servers
+
+3. **Log Collection and Centralization**:
+   - Use of SIEM (Security Information and Event Management) systems
+   - Log aggregation tools
+
+### Best Practices
+
+- Ensure proper log retention policies
+- Implement secure log storage
+- Maintain log integrity through hashing or digital signatures
+- Synchronize system clocks for accurate timestamps
+- Regularly review and analyze logs
+
+### Analysis Techniques
+
+1. **Pattern Recognition**: Identify recurring events or anomalies
+2. **Correlation**: Connect events across multiple log sources
+3. **Timeline Analysis**: Reconstruct the sequence of events
+4. **Filtering**: Focus on relevant data using specific criteria
+
+### Example: Detecting a Brute Force Attack
+
+Consider the following excerpt from an authentication log:
+
+```
+2023-06-15 08:45:23 Failed login attempt for user 'admin' from IP 192.168.1.100
+2023-06-15 08:45:25 Failed login attempt for user 'admin' from IP 192.168.1.100
+2023-06-15 08:45:27 Failed login attempt for user 'admin' from IP 192.168.1.100
+2023-06-15 08:45:30 Successful login for user 'admin' from IP 192.168.1.100
+```
+
+This pattern of multiple failed login attempts followed by a successful one could indicate a brute force attack. The analyst would:
+
+1. Identify the suspicious pattern
+2. Investigate the source IP
+3. Check for similar patterns across other systems
+4. Determine if the successful login was legitimate or a breach
+
+### Tip: Automated Log Analysis
+
+Use tools like `grep`, `awk`, or specialized log analysis software to quickly search and parse large log files. For example:
+
+```bash
+grep "Failed login attempt" auth.log | awk '{print $1, $2, $9}' | sort | uniq -c
+```
+
+This command would list unique IP addresses with their failed login attempt counts, helping to identify potential attackers.
+
+---
+

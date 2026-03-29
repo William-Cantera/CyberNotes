@@ -622,3 +622,115 @@ if __name__ == "__main__":
 # 4. Understand how file hashing works in practice
 ```
 
+```python
+import hashlib
+import os
+import time
+
+def hash_file(filename, algorithm='sha256'):
+    """
+    Calculate the hash of a file using the specified algorithm.
+    
+    Args:
+    filename (str): Path to the file to be hashed
+    algorithm (str): Hash algorithm to use (default: sha256)
+    
+    Returns:
+    str: Hexadecimal representation of the file's hash
+    
+    Raises:
+    ValueError: If an unsupported hash algorithm is specified
+    FileNotFoundError: If the specified file does not exist
+    """
+    
+    # Dictionary of supported hash algorithms
+    hash_funcs = {
+        'md5': hashlib.md5,
+        'sha1': hashlib.sha1,
+        'sha256': hashlib.sha256,
+        'sha512': hashlib.sha512
+    }
+    
+    # Check if the specified algorithm is supported
+    if algorithm not in hash_funcs:
+        raise ValueError(f"Unsupported hash algorithm: {algorithm}")
+    
+    # Create a hash object
+    hasher = hash_funcs[algorithm]()
+    
+    # Open the file in binary mode and update the hash object
+    with open(filename, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hasher.update(chunk)
+    
+    # Return the hexadecimal representation of the hash
+    return hasher.hexdigest()
+
+def verify_file_integrity(filename, expected_hash, algorithm='sha256'):
+    """
+    Verify the integrity of a file by comparing its hash to an expected value.
+    
+    Args:
+    filename (str): Path to the file to be verified
+    expected_hash (str): Expected hash value
+    algorithm (str): Hash algorithm to use (default: sha256)
+    
+    Returns:
+    bool: True if the file's hash matches the expected hash, False otherwise
+    """
+    
+    actual_hash = hash_file(filename, algorithm)
+    return actual_hash.lower() == expected_hash.lower()
+
+def monitor_file_changes(filename, interval=5, algorithm='sha256'):
+    """
+    Monitor a file for changes by periodically calculating its hash.
+    
+    Args:
+    filename (str): Path to the file to be monitored
+    interval (int): Time interval between checks in seconds (default: 5)
+    algorithm (str): Hash algorithm to use (default: sha256)
+    """
+    
+    initial_hash = hash_file(filename, algorithm)
+    print(f"Initial {algorithm} hash: {initial_hash}")
+    
+    try:
+        while True:
+            time.sleep(interval)
+            current_hash = hash_file(filename, algorithm)
+            
+            if current_hash != initial_hash:
+                print(f"File changed! New {algorithm} hash: {current_hash}")
+                initial_hash = current_hash
+            else:
+                print(f"File unchanged. {algorithm} hash: {current_hash}")
+    except KeyboardInterrupt:
+        print("\nMonitoring stopped.")
+
+# Example usage:
+if __name__ == "__main__":
+    test_file = "example.txt"
+    
+    # Create a test file
+    with open(test_file, "w") as f:
+        f.write("This is a test file for hashing.")
+    
+    # Calculate and print the file's hash
+    file_hash = hash_file(test_file)
+    print(f"SHA256 hash of {test_file}: {file_hash}")
+    
+    # Verify file integrity
+    is_valid = verify_file_integrity(test_file, file_hash)
+    print(f"File integrity verified: {is_valid}")
+    
+    # Monitor file for changes
+    print(f"Monitoring {test_file} for changes (Ctrl+C to stop):")
+    monitor_file_changes(test_file)
+
+# This script demonstrates the use of cryptographic hash functions for file integrity verification
+# and change monitoring. These techniques are crucial in cybersecurity for:
+# 1. Ensuring the integrity of critical system files
+# 2. Detecting unauthorized modifications to sensitive data
+# 3. Identifying potential
+

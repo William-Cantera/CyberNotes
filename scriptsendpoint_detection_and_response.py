@@ -204,3 +204,91 @@ if __name__ == "__main__":
     simulate_edr()
 ```
 
+```python
+import os
+import psutil
+import hashlib
+import time
+
+def endpoint_monitor(duration=60, interval=5):
+    """
+    Monitor endpoint activity for a specified duration.
+    
+    This function simulates basic Endpoint Detection and Response (EDR) functionality
+    by monitoring running processes, file system changes, and network connections.
+    
+    Args:
+    duration (int): Total monitoring duration in seconds (default: 60)
+    interval (int): Interval between checks in seconds (default: 5)
+    
+    Returns:
+    dict: A summary of the monitoring results
+    
+    Usage:
+    results = endpoint_monitor(duration=300, interval=10)
+    print(results)
+    
+    Note: This is a simplified simulation for educational purposes.
+    Real EDR solutions are much more complex and comprehensive.
+    """
+    
+    start_time = time.time()
+    end_time = start_time + duration
+    
+    baseline_processes = set(psutil.process_iter(['pid', 'name']))
+    baseline_files = set(os.listdir())
+    
+    summary = {
+        'new_processes': [],
+        'terminated_processes': [],
+        'new_files': [],
+        'deleted_files': [],
+        'network_connections': set()
+    }
+    
+    while time.time() < end_time:
+        # Check for new or terminated processes
+        current_processes = set(psutil.process_iter(['pid', 'name']))
+        new_processes = current_processes - baseline_processes
+        terminated_processes = baseline_processes - current_processes
+        
+        summary['new_processes'].extend([p.info['name'] for p in new_processes])
+        summary['terminated_processes'].extend([p.info['name'] for p in terminated_processes])
+        
+        baseline_processes = current_processes
+        
+        # Check for file system changes
+        current_files = set(os.listdir())
+        new_files = current_files - baseline_files
+        deleted_files = baseline_files - current_files
+        
+        summary['new_files'].extend(new_files)
+        summary['deleted_files'].extend(deleted_files)
+        
+        baseline_files = current_files
+        
+        # Monitor network connections
+        for conn in psutil.net_connections():
+            if conn.status == 'ESTABLISHED':
+                summary['network_connections'].add(f"{conn.laddr.ip}:{conn.laddr.port} -> {conn.raddr.ip}:{conn.raddr.port}")
+        
+        time.sleep(interval)
+    
+    # Convert sets to lists for easier reading
+    summary['network_connections'] = list(summary['network_connections'])
+    
+    return summary
+
+# Example usage
+if __name__ == "__main__":
+    print("Starting endpoint monitoring simulation...")
+    results = endpoint_monitor(duration=30, interval=5)
+    print("\nMonitoring Results:")
+    for key, value in results.items():
+        print(f"{key.replace('_', ' ').title()}:")
+        for item in value:
+            print(f"  - {item}")
+        print()
+
+```
+

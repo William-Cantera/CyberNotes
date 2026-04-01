@@ -341,3 +341,8 @@ By implementing these mitigation strategies, organizations can significantly red
 
 ---
 
+# Fallback content for Password Cracking Mitigation
+Error 1
+
+---
+

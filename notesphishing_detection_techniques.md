@@ -191,3 +191,8 @@ By combining these techniques, organizations can significantly improve their phi
 
 ---
 
+# Fallback content for Phishing Detection Techniques
+Error 1
+
+---
+

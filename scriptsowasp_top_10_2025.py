@@ -168,3 +168,6 @@ if __name__ == "__main__":
 # consent from the website owner, and careful ethical considerations.
 ```
 
+# Fallback content for OWASP Top 10 2025
+Error 1
+

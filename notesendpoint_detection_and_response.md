@@ -192,3 +192,8 @@ This simple command can help quickly identify the sequence of malicious activiti
 
 ---
 
+# Fallback content for Endpoint Detection and Response
+Error 1
+
+---
+

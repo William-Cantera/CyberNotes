@@ -513,3 +513,8 @@ Remember, XSS prevention is not a one-size-fits-all solution. It requires a mult
 
 ---
 
+# Fallback content for XSS Prevention in Web Apps
+Error 1
+
+---
+

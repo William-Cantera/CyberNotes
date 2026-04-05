@@ -290,3 +290,8 @@ When analyzing HTTPS traffic, you may need to configure Wireshark with the appro
 
 ---
 
+# Fallback content for Network Traffic Analysis with Wireshark
+Error 1
+
+---
+

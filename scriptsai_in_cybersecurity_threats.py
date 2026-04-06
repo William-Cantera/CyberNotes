@@ -233,3 +233,6 @@ def ai_threat_simulator(num_attacks=10, duration=60):
 # ai_threat_simulator(num_attacks=15, duration=90)
 ```
 
+# Fallback content for AI in Cybersecurity Threats
+Error 1
+

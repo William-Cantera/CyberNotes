@@ -353,3 +353,8 @@ By implementing these defensive measures and staying vigilant, organizations can
 
 ---
 
+# Fallback content for Supply Chain Attack Defense
+Error 1
+
+---
+

@@ -428,3 +428,6 @@ if __name__ == "__main__":
         print(f"\nFailed to crack password after {attempts} attempts and {time_taken:.2f} seconds")
 ```
 
+# Fallback content for Password Cracking Mitigation
+Error 1
+

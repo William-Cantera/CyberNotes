@@ -492,3 +492,8 @@ This command would list unique IP addresses with their failed login attempt coun
 
 ---
 
+# Fallback content for Forensic Analysis of Logs
+Error 1
+
+---
+

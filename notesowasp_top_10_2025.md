@@ -105,3 +105,8 @@ By staying informed about emerging threats and implementing proactive security m
 
 ---
 
+# Fallback content for OWASP Top 10 2025
+Error 1
+
+---
+

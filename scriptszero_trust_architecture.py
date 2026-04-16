@@ -195,3 +195,6 @@ def zero_trust_tls_checker(url):
 # Fallback content for Zero Trust Architecture
 Error 1
 
+# Fallback content for Zero Trust Architecture
+Error 1
+

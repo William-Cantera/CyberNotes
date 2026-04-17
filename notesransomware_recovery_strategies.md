@@ -760,3 +760,8 @@ Remember, the key to successful ransomware recovery is preparation. Regular back
 
 ---
 
+# Fallback content for Ransomware Recovery Strategies
+Error 1
+
+---
+

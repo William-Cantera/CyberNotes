@@ -315,3 +315,8 @@ By adopting Zero Trust Architecture, organizations can significantly improve the
 
 ---
 
+# Fallback content for Zero Trust Architecture
+Error 1
+
+---
+

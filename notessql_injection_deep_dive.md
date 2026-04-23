@@ -352,3 +352,8 @@ Always obtain proper authorization before testing on live systems, and use dedic
 
 ---
 
+# Fallback content for SQL Injection Deep Dive
+Error 1
+
+---
+

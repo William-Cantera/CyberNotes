@@ -88,3 +88,8 @@ By implementing these hardening techniques, you can significantly reduce the att
 
 ---
 
+# Fallback content for IoT Device Hardening
+Error 1
+
+---
+

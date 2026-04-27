@@ -156,3 +156,6 @@ if __name__ == "__main__":
         print(f"{key}: {value}")
 ```
 
+# Fallback content for IoT Device Hardening
+Error 1
+

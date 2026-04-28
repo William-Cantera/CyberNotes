@@ -442,3 +442,6 @@ def analyze_url_for_phishing(url):
 # Example usage
 if __name__ == "__main__
 
+# Fallback content for Phishing Detection Techniques
+Error 1
+

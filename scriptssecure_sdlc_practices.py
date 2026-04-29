@@ -256,3 +256,6 @@ if __name__ == "__main__":
         print(f"Error: Unable to read file '{filename}'.")
 ```
 
+# Fallback content for Secure SDLC Practices
+Error 1
+

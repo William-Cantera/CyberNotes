@@ -329,3 +329,8 @@ Error 1
 
 ---
 
+# Fallback content for Cryptographic Hash Functions
+Error 1
+
+---
+

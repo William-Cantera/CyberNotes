@@ -183,3 +183,6 @@ if __name__ == "__main__":
 # Unauthorized port scanning may be illegal or against acceptable use policies.
 ```
 
+# Fallback content for Penetration Testing Methodology
+Error 1
+

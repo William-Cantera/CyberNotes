@@ -152,3 +152,6 @@ if __name__ == "__main__":
 # 5. Add options for time-based filtering of log entries
 ```
 
+# Fallback content for Forensic Analysis of Logs
+Error 1
+

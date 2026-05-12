@@ -105,3 +105,6 @@ simulate_attack()
 # - Demonstrates the importance of data integrity in blockchains.
 # - Can be extended to test more complex attack scenarios or security measures.
 
+# Fallback content for Blockchain Security Considerations
+Error 1
+

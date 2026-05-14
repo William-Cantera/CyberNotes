@@ -211,3 +211,8 @@ Error 1
 
 ---
 
+# Fallback content for Phishing Detection Techniques
+Error 1
+
+---
+

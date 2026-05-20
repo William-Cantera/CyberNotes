@@ -356,3 +356,6 @@ if __name__ == "__main__":
         print("No obvious vulnerabilities detected.")
 ```
 
+# Fallback content for SQL Injection Deep Dive
+Error 1
+

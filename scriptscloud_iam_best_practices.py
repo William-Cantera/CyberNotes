@@ -71,3 +71,6 @@ def analyze_iam_policies(policy_file):
 # Fallback content for Cloud IAM Best Practices
 Error 1
 
+# Fallback content for Cloud IAM Best Practices
+Error 1
+

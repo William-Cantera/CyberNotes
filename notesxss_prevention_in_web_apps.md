@@ -528,3 +528,8 @@ Error 1
 
 ---
 
+# Fallback content for XSS Prevention in Web Apps
+Error 1
+
+---
+

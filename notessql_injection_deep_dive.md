@@ -372,3 +372,8 @@ Error 1
 
 ---
 
+# Fallback content for SQL Injection Deep Dive
+Error 1
+
+---
+

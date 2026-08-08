@@ -325,3 +325,8 @@ Error 1
 
 ---
 
+# Fallback content for Network Traffic Analysis with Wireshark
+Error 1
+
+---
+
